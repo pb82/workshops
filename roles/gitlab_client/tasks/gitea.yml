@@ -17,7 +17,7 @@
 - name: Configure workshop repository
   lineinfile:
     name: /home/{{ username }}/windows-workshop/workshop_project/.git/config
-    line: "	url = https://{{ student }}:{{admin_password|urlencode()}}@gitlab.{{ec2_name_prefix}}.{{workshop_dns_zone}}/{{ student }}/workshop_project.git"
+    line: "\turl = https://{{ student }}:{{admin_password|urlencode()}}@gitlab.{{ec2_name_prefix}}.{{workshop_dns_zone}}/{{ student }}/workshop_project.git"
     state: present
   check_mode: true
   register: gitrepo

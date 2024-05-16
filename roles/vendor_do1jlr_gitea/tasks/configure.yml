@@ -1,15 +1,15 @@
 ---
-- name: "Configure gitea"
+- name: Configure gitea
   become: true
   ansible.builtin.template:
     src: gitea.ini.j2
     dest: /etc/gitea/gitea.ini
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
-    mode: 0600
-  notify: "Restart gitea"
+    mode: "0600"
+  notify: Restart gitea
 
-- name: "Service gitea"
+- name: Service gitea
   become: true
   ansible.builtin.systemd:
     name: gitea

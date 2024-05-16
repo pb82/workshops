@@ -1,7 +1,7 @@
 ---
 - name: make sure .ssh is created
   file:
-    path: "/home/{{ username }}/.ssh/"
+    path: /home/{{ username }}/.ssh/
     owner: "{{ username }}"
     group: "{{ username }}"
     state: directory
@@ -9,7 +9,7 @@
 - name: Apply patch for runner fix PR759
   lineinfile:
     path: /usr/lib/python3.8/site-packages/ansible_runner/config/_base.py
-    regexp: ".*--userns=keep-id.*"
+    regexp: .*--userns=keep-id.*
     state: absent
 
 ##
@@ -22,14 +22,14 @@
     dest: /home/{{ username }}/.bashrc
     owner: "{{ username }}"
     group: "{{ username }}"
-    mode: 0644
+    mode: "0644"
 
 # Login into Red Hat registry
 - name: Login to redhat registry
   containers.podman.podman_login:
-    username: '{{ redhat_username }}'
-    password: '{{ redhat_password }}'
-    registry: '{{ ee_registry_name }}'
+    username: "{{ redhat_username }}"
+    password: "{{ redhat_password }}"
+    registry: "{{ ee_registry_name }}"
   become_user: "{{ username }}"
   register: login_registry
   until: login_registry is not failed
@@ -41,4 +41,4 @@
     dest: /home/{{ username }}/.ssh/config
     owner: "{{ username }}"
     group: "{{ username }}"
-    mode: 0700
+    mode: "0700"

@@ -4,7 +4,7 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Workshop_splunk": "{{ ec2_name_prefix }}-splunk"
+      tag:Workshop_splunk: "{{ ec2_name_prefix }}-splunk"
   register: splunk_instances
   when:
     - (security_console == 'splunk')
@@ -17,7 +17,7 @@
     tags:
       Name: "{{ ec2_name_prefix }}-student{{ item[0] + 1 }}-splunk"
       Index: "{{ item[0] }}"
-      Student: "student{{ item[0] + 1 }}"
+      Student: student{{ item[0] + 1 }}
       launch_time: "{{ item.1.launch_time }}"
       ansible-workshops: "true"
   with_indexed_items:
@@ -33,7 +33,7 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Workshop_qradar": "{{ ec2_name_prefix }}-qradar"
+      tag:Workshop_qradar: "{{ ec2_name_prefix }}-qradar"
   register: qradar_instances
   when:
     - (security_console == 'qradar')
@@ -46,7 +46,7 @@
     tags:
       Name: "{{ ec2_name_prefix }}-student{{ item.0 + 1 }}-qradar"
       Index: "{{ item[0] }}"
-      Student: "student{{ item.0 + 1 }}"
+      Student: student{{ item.0 + 1 }}
       launch_time: "{{ item.1.launch_time }}"
       ansible-workshops: "true"
   with_indexed_items:
@@ -69,7 +69,7 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Workshop_snort": "{{ ec2_name_prefix }}-snort"
+      tag:Workshop_snort: "{{ ec2_name_prefix }}-snort"
   register: snort_instances
 
 - name: Ensure tags are present for snort
@@ -80,7 +80,7 @@
     tags:
       Name: "{{ ec2_name_prefix }}-student{{ item[0] + 1 }}-snort"
       Index: "{{ item[0] }}"
-      Student: "student{{ item[0] + 1 }}"
+      Student: student{{ item[0] + 1 }}
       launch_time: "{{ item.1.launch_time }}"
       ansible-workshops: "true"
   with_indexed_items:
@@ -95,7 +95,7 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Workshop_attacker": "{{ ec2_name_prefix }}-attacker"
+      tag:Workshop_attacker: "{{ ec2_name_prefix }}-attacker"
   register: attacker_instances
 
 - name: Ensure tags are present for attack simulation node
@@ -106,7 +106,7 @@
     tags:
       Name: "{{ ec2_name_prefix }}-student{{ item[0] + 1 }}-attacker"
       Index: "{{ item[0] }}"
-      Student: "student{{ item[0] + 1 }}"
+      Student: student{{ item[0] + 1 }}
       launch_time: "{{ item.1.launch_time }}"
       ansible-workshops: "true"
   with_indexed_items:
@@ -122,7 +122,7 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Workshop_checkpoint_mgmt": "{{ ec2_name_prefix }}-checkpoint"
+      tag:Workshop_checkpoint_mgmt: "{{ ec2_name_prefix }}-checkpoint"
   register: checkpoint_mgmt_instances
 
 - name: Ensure tags are present for Check Point CloudGuard Security Management node (SECURITY MODE)
@@ -133,7 +133,7 @@
     tags:
       Name: "{{ ec2_name_prefix }}-student{{ item[0] + 1 }}-checkpoint_mgmt"
       Index: "{{ item[0] }}"
-      Student: "student{{ item[0] + 1 }}"
+      Student: student{{ item[0] + 1 }}
       launch_time: "{{ item.1.launch_time }}"
       ansible-workshops: "true"
   with_indexed_items:
@@ -149,7 +149,7 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Workshop_windows": "{{ ec2_name_prefix }}-windows"
+      tag:Workshop_windows: "{{ ec2_name_prefix }}-windows"
   register: windows_ws_instances
 
 - name: Ensure tags are present for Windows Workstation (SECURITY MODE)
@@ -160,7 +160,7 @@
     tags:
       Name: "{{ ec2_name_prefix }}-student{{ item[0] + 1 }}-windows_ws"
       Index: "{{ item[0] }}"
-      Student: "student{{ item[0] + 1 }}"
+      Student: student{{ item[0] + 1 }}
       launch_time: "{{ item.1.launch_time }}"
       ansible-workshops: "true"
   with_indexed_items:
@@ -220,7 +220,7 @@
   async_status:
     jid: "{{ item.results[0].ansible_job_id }}"
   register: wait_for_ec2_tag_creation
-  when: "item.results[0].ansible_job_id is defined"
+  when: item.results[0].ansible_job_id is defined
   until: wait_for_ec2_tag_creation.finished
   retries: "{{ [async_wait_for_retries | int, 60] | max }}"
   loop:
@@ -229,7 +229,6 @@
     - "{{ ensure_tags_attacker_async }}"
     - "{{ ensure_tags_checkpoint_mgmt_async }}"
     - "{{ ensure_tags_windows_async }}"
-
 
 # This is old method from Adam Miller
 # - name: Wait for async tag creation to complete (instance creation)

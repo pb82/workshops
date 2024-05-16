@@ -29,4 +29,3 @@ code_server: true
 # ansible_workshops_url: https://github.com/ansible/workshops
 # ansible_workshops_version: auto_satellite
 tower_node_aws_api_access: true
-...

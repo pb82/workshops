@@ -13,13 +13,13 @@
 
 - name: ensure vhost directory is present
   file:
-    path: "/var/www/vhosts/{{ ansible_hostname }}"
+    path: /var/www/vhosts/{{ ansible_hostname }}
     state: directory
 
 - name: deliver html content
   copy:
     src: web.html
-    dest: "/var/www/vhosts/{{ ansible_hostname }}/index.html"
+    dest: /var/www/vhosts/{{ ansible_hostname }}/index.html
 
 - name: template vhost file
   template:
@@ -27,6 +27,6 @@
     dest: /etc/httpd/conf.d/vhost.conf
     owner: root
     group: root
-    mode: 0644
+    mode: "0644"
   notify:
     - restart_httpd

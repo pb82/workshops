@@ -6,23 +6,23 @@
   awx.awx.tower_settings:
     name: AD_HOC_COMMANDS
     value:
-      - 'command'
-      - 'shell'
-      - 'ping'
-      - 'setup'
-      - 'win_ping'
-      - 'win_service'
-      - 'win_updates'
-      - 'win_group'
-      - 'win_user'
-      - 'win_shell'
-      - 'win_feature'
-      - 'win_reboot'
-      - 'win_chocolatey'
+      - command
+      - shell
+      - ping
+      - setup
+      - win_ping
+      - win_service
+      - win_updates
+      - win_group
+      - win_user
+      - win_shell
+      - win_feature
+      - win_reboot
+      - win_chocolatey
     validate_certs: false
     controller_password: "{{ admin_password }}"
     controller_username: "{{ student }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
   register: adhoc_commands
   until: adhoc_commands is success
   delay: 3
@@ -31,5 +31,5 @@
 - name: Disable GIT Cert validation
   lineinfile:
     path: /etc/tower/settings.py
-    regexp: 'GIT_SSL_NO_VERIFY'
-    line: "AWX_TASK_ENV['GIT_SSL_NO_VERIFY'] = 'True'"
+    regexp: GIT_SSL_NO_VERIFY
+    line: AWX_TASK_ENV['GIT_SSL_NO_VERIFY'] = 'True'

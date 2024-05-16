@@ -3,7 +3,6 @@
   hosts: web
   become: true
   tasks:
-
     - name: Install Apache
       ansible.builtin.dnf:
         name: httpd
@@ -18,4 +17,4 @@
       ansible.builtin.copy:
         src: web.html
         dest: /var/www/html/index.html
-        mode: '644'
+        mode: "644"

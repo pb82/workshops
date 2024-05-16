@@ -12,8 +12,8 @@
 - name: Remove PeerDNS=yes entry
   lineinfile:
     path: "{{ item }}"
-    regexp: '^PEERDNS='
-    line: 'PEERDNS=no'
+    regexp: ^PEERDNS=
+    line: PEERDNS=no
   with_items: "{{ eths.stdout_lines }}"
   register: ifcfg
 
@@ -39,7 +39,7 @@
     state: touch
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
 
 - name: set custom DNS server
   blockinfile:

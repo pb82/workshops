@@ -14,7 +14,7 @@
 
     - name: DISPLAY SERIAL NUMBER
       debug:
-        msg: "The serial number is:{{ ansible_net_serialnum }}"
+        msg: The serial number is:{{ ansible_net_serialnum }}
 
     - name: COLLECT OUTPUT OF SHOW COMMANDS
       ios_command:
@@ -31,5 +31,5 @@
 
     - name: DISPLAY THE HOSTNAME
       debug:
-        msg: "The hostname is {{ show_output.stdout[0] }}"
+        msg: The hostname is {{ show_output.stdout[0] }}
       tags: show

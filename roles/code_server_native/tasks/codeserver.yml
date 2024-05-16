@@ -1,9 +1,9 @@
 ---
 - name: Ensure code-server configuration directory exists
   ansible.builtin.file:
-    path: "/home/{{ username }}/.config/code-server"
+    path: /home/{{ username }}/.config/code-server
     state: directory
-    mode: '0755'
+    mode: "0755"
   when: not pre_build|bool
 
 - name: Ensure code-server config.yaml configuration is set | DNS off
@@ -11,53 +11,53 @@
     content: |
       bind-addr: 0.0.0.0:8080
       password: "{{ admin_password }}"
-    dest: "/home/{{ username }}/.config/code-server/config.yaml"
-    mode: '0644'
+    dest: /home/{{ username }}/.config/code-server/config.yaml
+    mode: "0644"
   notify:
-  - Restart code-server
+    - Restart code-server
   when:
     - dns_type is defined
-    - dns_type == "none"  
+    - dns_type == "none"
 
 - name: Ensure code-server config.yaml configuration is set | DNS on
   when:
     - dns_type is defined
-    - dns_type == "aws"  
+    - dns_type == "aws"
   ansible.builtin.copy:
     content: |
       bind-addr: 0.0.0.0:8080
       cert: "/home/{{ username }}/{{ student }}.{{ ec2_name_prefix|lower|default('unknown') }}.{{ workshop_dns_zone|default('example.com') }}/cert.pem"
       cert-key: "/home/{{ username }}/{{ student }}.{{ ec2_name_prefix|lower|default('unknown') }}.{{ workshop_dns_zone|default('example.com') }}/privkey.pem"
       password: "{{ admin_password }}"
-    dest: "/home/{{ username }}/.config/code-server/config.yaml"
-    mode: '0644'
+    dest: /home/{{ username }}/.config/code-server/config.yaml
+    mode: "0644"
   notify:
-  - Restart code-server
+    - Restart code-server
 
 - name: Download code-server RPM
   ansible.builtin.get_url:
-    url: "https://github.com/coder/code-server/releases/download/v4.17.1/code-server-4.17.1-amd64.rpm"
-    dest: "/tmp/code-server.rpm"
-    mode: '0755'
+    url: https://github.com/coder/code-server/releases/download/v4.17.1/code-server-4.17.1-amd64.rpm
+    dest: /tmp/code-server.rpm
+    mode: "0755"
   when: not pre_build|bool
 
 - name: Install code-server
   ansible.builtin.yum:
-    name: "/tmp/code-server.rpm"
+    name: /tmp/code-server.rpm
     state: present
     disable_gpg_check: true
   when: not pre_build|bool
 
 - name: Enable and start code-server for student
   ansible.builtin.systemd:
-    name: "code-server@{{ username }}"
-    enabled: yes
+    name: code-server@{{ username }}
+    enabled: true
     state: started
 
 # source: https://vscode.readthedocs.io/en/latest/getstarted/settings/
 - name: ensure custom facts directory exists
   ansible.builtin.file:
-    path: "/home/{{ username }}/.local/share/code-server/User/"
+    path: /home/{{ username }}/.local/share/code-server/User/
     recurse: true
     state: directory
     owner: "{{ username }}"
@@ -66,7 +66,7 @@
 - name: Apply code server defaults
   ansible.builtin.template:
     src: settings.json
-    dest: "/home/{{ username }}/.local/share/code-server/User/settings.json"
+    dest: /home/{{ username }}/.local/share/code-server/User/settings.json
     owner: "{{ username }}"
   when: not pre_build|bool
 
@@ -95,7 +95,7 @@
 
 - name: install ansible and markdown extensions
   become_user: "{{ username }}"
-  ansible.builtin.command: "/bin/code-server --install-extension /home/{{ username }}/.local/share/code-server/extensions/{{ item }}"
+  ansible.builtin.command: /bin/code-server --install-extension /home/{{ username }}/.local/share/code-server/extensions/{{ item }}
   loop:
     - bierner.markdown-preview-github-styles-0.1.6.vsix
     - hnw.vscode-auto-open-markdown-preview-0.0.4.vsix
@@ -105,4 +105,3 @@
   until: install_extension is not failed
   retries: 5
   when: not pre_build|bool
-

@@ -1,14 +1,14 @@
 ---
-- name: "Create config and data directory"
+- name: Create config and data directory
   become: true
   ansible.builtin.file:
     path: "{{ item }}"
     state: directory
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
-    mode: 'u=rwX,g=rX,o='
+    mode: u=rwX,g=rX,o=
   with_items:
-    - "/etc/gitea"
+    - /etc/gitea
     - "{{ gitea_home }}"
     - "{{ gitea_home }}/data"
     - "{{ gitea_custom }}"

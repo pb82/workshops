@@ -36,7 +36,7 @@
         path: "{{ playbook_dir }}/manifest.zip"
       register: manifest_result
     - fail:
-        msg: "Need a manifest file at {{ playbook_dir }}/manifest.zip"
+        msg: Need a manifest file at {{ playbook_dir }}/manifest.zip
       when:
         - not manifest_result.stat.exists
   rescue:

@@ -3,7 +3,7 @@
   hosts: node1
   become: true
   tasks:
-  - name: latest Apache version installed
-    yum:
-      name: httpd
-      state: latest
+    - name: latest Apache version installed
+      yum:
+        name: httpd
+        state: latest

@@ -26,43 +26,43 @@
         - name: CREATE POOL
           f5networks.f5_modules.bigip_pool:
             provider: "{{provider}}"
-            name: "http_pool"
-            lb_method: "round-robin"
-            monitors: "/Common/http"
-            monitor_type: "and_list"
+            name: http_pool
+            lb_method: round-robin
+            monitors: /Common/http
+            monitor_type: and_list
 
         - name: ADD POOL MEMBERS
           f5networks.f5_modules.bigip_pool_member:
             provider: "{{provider}}"
-            state: "present"
+            state: present
             name: "{{hostvars[item].inventory_hostname}}"
             host: "{{hostvars[item].ansible_host}}"
             port: "80"
-            pool: "http_pool"
+            pool: http_pool
           loop: "{{ groups['web'] }}"
 
         - name: ADD VIRTUAL SERVER
           f5networks.f5_modules.bigip_virtual_server:
             provider: "{{provider}}"
-            name: "vip"
+            name: vip
             destination: "{{private_ip}}"
             port: "443"
-            enabled_vlans: "all"
-            all_profiles: ['http', 'clientssl', 'oneconnect']
-            pool: "http_pool"
-            snat: "Automap1"
+            enabled_vlans: all
+            all_profiles: [http, clientssl, oneconnect]
+            pool: http_pool
+            snat: Automap1
 
       rescue:
         - name: DELETE VIRTUAL SERVER
           f5networks.f5_modules.bigip_virtual_server:
             provider: "{{provider}}"
-            name: "vip"
+            name: vip
             state: absent
 
         - name: DELETE POOL
           f5networks.f5_modules.bigip_pool:
             provider: "{{provider}}"
-            name: "http_pool"
+            name: http_pool
             state: absent
 
         - name: DELETE NODES

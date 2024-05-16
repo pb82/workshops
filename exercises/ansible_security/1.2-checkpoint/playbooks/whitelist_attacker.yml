@@ -9,12 +9,12 @@
   tasks:
     - name: Create source IP host object
       checkpoint_host:
-        name: "asa-{{ source_ip }}"
+        name: asa-{{ source_ip }}
         ip_address: "{{ source_ip }}"
 
     - name: Create destination IP host object
       checkpoint_host:
-        name: "asa-{{ destination_ip }}"
+        name: asa-{{ destination_ip }}
         ip_address: "{{ destination_ip }}"
 
     - name: Create access rule to allow access from source to destination
@@ -23,9 +23,9 @@
         auto_publish_session: true
         layer: Network
         position: top
-        name: "asa-accept-{{ source_ip }}-to-{{ destination_ip }}"
-        source: "asa-{{ source_ip }}"
-        destination: "asa-{{ destination_ip }}"
+        name: asa-accept-{{ source_ip }}-to-{{ destination_ip }}
+        source: asa-{{ source_ip }}
+        destination: asa-{{ destination_ip }}
         action: accept
 
     - name: Install policy

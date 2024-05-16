@@ -3,7 +3,7 @@
   ansible.builtin.assert:
     that:
       - windows_password is defined
-    msg: "windows_password must be set for security automation workshop"
+    msg: windows_password must be set for security automation workshop
 
 - name: Install required roles
   community.general.ansible_galaxy_install:

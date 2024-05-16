@@ -13,7 +13,7 @@
 - name: GitLab post | wait for gitlab to start
   become: false
   get_certificate:
-    host: "gitlab.{{ec2_name_prefix|lower}}.{{workshop_dns_zone}}"
+    host: gitlab.{{ec2_name_prefix|lower}}.{{workshop_dns_zone}}
     port: 443
   delegate_to: localhost
   register: check_cert2
@@ -51,7 +51,7 @@
         dest: /root/set_root_pw.sh
         owner: root
         group: root
-        mode: 0700
+        mode: "0700"
 
     - name: GitLab Post | Execute set root password
       command: ./set_root_pw.sh

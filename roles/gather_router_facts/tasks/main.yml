@@ -4,7 +4,7 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Name": "{{ec2_name_prefix}}-{{username}}-rtr1"
+      tag:Name: "{{ec2_name_prefix}}-{{username}}-rtr1"
   register: rtr1_node_facts
   delegate_to: localhost
 
@@ -13,7 +13,7 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Name": "{{ec2_name_prefix}}-{{username}}-rtr2"
+      tag:Name: "{{ec2_name_prefix}}-{{username}}-rtr2"
   register: rtr2_node_facts
   delegate_to: localhost
 
@@ -22,7 +22,7 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Name": "{{ec2_name_prefix}}-{{username}}-rtr3"
+      tag:Name: "{{ec2_name_prefix}}-{{username}}-rtr3"
   register: rtr3_node_facts
   delegate_to: localhost
 
@@ -31,6 +31,6 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Name": "{{ec2_name_prefix}}-{{username}}-rtr4"
+      tag:Name: "{{ec2_name_prefix}}-{{username}}-rtr4"
   register: rtr4_node_facts
   delegate_to: localhost

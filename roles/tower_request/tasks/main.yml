@@ -20,7 +20,7 @@
         body_format: json
   rescue:
     - debug:
-        msg: 'Ansible Tower callback has failed, we will fail gracefully'
+        msg: Ansible Tower callback has failed, we will fail gracefully
 
     - name: append information to summary
       set_fact:

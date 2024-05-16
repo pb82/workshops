@@ -23,12 +23,11 @@
           set_fact:
             dns_information:
               - "{{ dns_information }}"
-              - "The Lets Encrypt certbot failed for the attendance node, please check https://letsencrypt.status.io/ to make sure the service is running"
+              - The Lets Encrypt certbot failed for the attendance node, please check https://letsencrypt.status.io/ to make sure the service is running
 
         - name: error with SSL cert
           debug:
-            msg: "Unable to retrieve SSL cert, ERROR, continuing on without cert..."
-
+            msg: Unable to retrieve SSL cert, ERROR, continuing on without cert...
 
     - name: install and configure nginx on attendance node
       include_tasks: 30_nginx.yml

@@ -4,8 +4,8 @@
     region: "{{ ec2_region }}"
     owners: "962147768365"
     filters:
-      name: "automation_hub*"
-      architecture: "x86_64"
+      name: automation_hub*
+      architecture: x86_64
   register: amis
 
 - name: Save private automation hub ami

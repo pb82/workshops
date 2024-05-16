@@ -1,7 +1,7 @@
 ---
 - name: login, get SID
   ansible.builtin.uri:
-    url: "https://{{ hostvars[inventory_hostname|regex_replace('ansible-1', 'checkpoint_mgmt')]['private_ip'] }}/web_api/login"
+    url: https://{{ hostvars[inventory_hostname|regex_replace('ansible-1', 'checkpoint_mgmt')]['private_ip'] }}/web_api/login
     method: POST
     body:
       user: admin
@@ -15,7 +15,7 @@
 
 - name: Add NGFW to MGMT
   ansible.builtin.uri:
-    url: "https://{{ hostvars[inventory_hostname|regex_replace('ansible-1', 'checkpoint_mgmt')]['private_ip'] }}/web_api/add-simple-gateway"
+    url: https://{{ hostvars[inventory_hostname|regex_replace('ansible-1', 'checkpoint_mgmt')]['private_ip'] }}/web_api/add-simple-gateway
     validate_certs: false
     method: POST
     headers:
@@ -33,27 +33,27 @@
         - anti-spoofing: true
           anti-spoofing-settings:
             action: prevent
-          name: "eth0"
+          name: eth0
           ip-address: "{{ hostvars[inventory_hostname|regex_replace('ansible-1', 'checkpoint_gw')]['private_ip'] }}"
-          network-mask: "255.255.0.0"
+          network-mask: 255.255.0.0
           ipv4-mask-length: 16
           security-zone: false
           topology: internal
           topology-settings:
-            ip-address-behind-this-interface: "network defined by the interface ip and net mask"
+            ip-address-behind-this-interface: network defined by the interface ip and net mask
         - anti-spoofing: true
           anti-spoofing-settings:
             action: prevent
-          name: "eth1"
+          name: eth1
           ip-address: "{{ hostvars[inventory_hostname|regex_replace('ansible-1', 'checkpoint_gw')]['private_ip2'] }}"
-          network-mask: "255.255.0.0"
+          network-mask: 255.255.0.0
           ipv4-mask-length: 16
           security-zone: false
           topology: external
 
 - name: Publish
   ansible.builtin.uri:
-    url: "https://{{ hostvars[inventory_hostname|regex_replace('ansible-1', 'checkpoint_mgmt')]['private_ip'] }}/web_api/publish"
+    url: https://{{ hostvars[inventory_hostname|regex_replace('ansible-1', 'checkpoint_mgmt')]['private_ip'] }}/web_api/publish
     validate_certs: false
     method: POST
     headers:
@@ -67,15 +67,16 @@
   amazon.aws.ec2_instance_info:
     region: "{{ ec2_region }}"
     filters:
-      "tag:Name": "{{ inventory_hostname|regex_replace('ansible-1', 'checkpoint_gw') }}"
-      "instance-state-name": running
+      tag:Name: "{{ inventory_hostname|regex_replace('ansible-1', 'checkpoint_gw') }}"
+      instance-state-name: running
   register: gw_inst
   delegate_to: localhost
 
 - name: disable source_dest_checking on AWS interface
   amazon.aws.ec2_eni:
     region: "{{ ec2_region }}"
-    eni_id: "{{ gw_inst['instances'][0]['network_interfaces'][0]['network_interface_id'] if gw_inst['instances'][0]['network_interfaces'][0]['attachment']['device_index'] == 1 else gw_inst['instances'][0]['network_interfaces'][1]['network_interface_id'] }}"
+    eni_id: "{{ gw_inst['instances'][0]['network_interfaces'][0]['network_interface_id'] if gw_inst['instances'][0]['network_interfaces'][0]['attachment']['device_index']
+      == 1 else gw_inst['instances'][0]['network_interfaces'][1]['network_interface_id'] }}"
     source_dest_check: false
     state: present
   delegate_to: localhost

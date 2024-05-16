@@ -19,7 +19,7 @@
   tasks:
     - name: setup epel on attacker
       include_role:
-        name: "geerlingguy.repo-epel"
+        name: geerlingguy.repo-epel
 
     - name: package pre-reqs are installed
       yum:
@@ -27,32 +27,32 @@
         name: daemonize
 
 - name: include splunk playbook
-  import_playbook: "security_workshop/splunk.yml"
+  import_playbook: security_workshop/splunk.yml
   when: security_console == 'splunk'
 
 - name: include qradar playbook
-  import_playbook: "security_workshop/qradar.yml"
+  import_playbook: security_workshop/qradar.yml
   when: security_console == 'qradar'
 
 - name: INSTALL AND CONFIGURE SNORT
   hosts: snort
   become: true
   vars:
-    ids_config_snort_version: '2.9.13'
-    ids_install_provider: "snort"
+    ids_config_snort_version: 2.9.13
+    ids_install_provider: snort
     ids_install_snort_user: root
     ids_install_snort_group: root
     ids_normalize_logs: false
     ids_install_snort_interface: eth1
     # @todo Craig Brandt - changing the default ids_install role values in the file until role PR is accepted
     ids_install_snort_pkgs:
-      - 'https://s3.amazonaws.com/ansible-security.workshop-files/daq-2.0.6-1.el7.x86_64.rpm'
-      - 'https://s3.amazonaws.com/ansible-security.workshop-files/snort-2.9.13-1.centos7.x86_64.rpm'
-      - 'libdnet'
-      - 'rsyslog'
-    ids_install_snort_community_rules_url: 'https://s3.amazonaws.com/ansible-security.workshop-files/community-rules.tar.gz'
-    ids_install_snort_registered_rules_url: 'https://s3.amazonaws.com/ansible-security.workshop-files/snortrules-snapshot-29130.tar.gz'
-    ids_install_snort_barnyard_pkg: 'https://s3.amazonaws.com/ansible-security.workshop-files/barnyard2-1.13-1.el7.x86_64.rpm'
+      - https://s3.amazonaws.com/ansible-security.workshop-files/daq-2.0.6-1.el7.x86_64.rpm
+      - https://s3.amazonaws.com/ansible-security.workshop-files/snort-2.9.13-1.centos7.x86_64.rpm
+      - libdnet
+      - rsyslog
+    ids_install_snort_community_rules_url: https://s3.amazonaws.com/ansible-security.workshop-files/community-rules.tar.gz
+    ids_install_snort_registered_rules_url: https://s3.amazonaws.com/ansible-security.workshop-files/snortrules-snapshot-29130.tar.gz
+    ids_install_snort_barnyard_pkg: https://s3.amazonaws.com/ansible-security.workshop-files/barnyard2-1.13-1.el7.x86_64.rpm
   tasks:
     - name: Set fact vars for ids based SIEM type
       block:
@@ -70,7 +70,7 @@
       block:
         - name: setup epel for snort ecosystem rule lifecycling
           include_role:
-            name: "geerlingguy.repo-epel"
+            name: geerlingguy.repo-epel
 
         - name: package pre-reqs are installed
           yum:
@@ -94,10 +94,10 @@
       block:
         - name: import ids_install role
           include_role:
-            name: "ansible_security.ids_install"
+            name: ansible_security.ids_install
         - name: import ids_config role
           include_role:
-            name: "ansible_security.ids_config"
+            name: ansible_security.ids_config
         - name: import webserver role for web exploit simulation
           include_role:
             name: ../../roles/webservers
@@ -119,7 +119,7 @@
         name: ../../roles/cp_fix_mgmt
 
 - name: SETUP CHECKPOINT ENVIRONMENT
-  hosts: '*ansible-1'
+  hosts: "*ansible-1"
   tasks:
     - include_role:
         name: ../../roles/cp_setup

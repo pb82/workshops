@@ -6,7 +6,7 @@
     state: directory
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
-    mode: 'u=rwX,g=rX,o='
+    mode: u=rwX,g=rX,o=
   with_items:
     - "{{ gitea_custom }}/public"
 
@@ -18,6 +18,6 @@
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
     directory_mode: true
-    mode: 'u=rwX,g=rX,o='
+    mode: u=rwX,g=rX,o=
   ignore_errors: true
-  notify: "Restart gitea"
+  notify: Restart gitea

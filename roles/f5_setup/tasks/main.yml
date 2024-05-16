@@ -22,7 +22,7 @@
       transport: cli
       user: admin
       server: "{{ ansible_host }}"
-    commands: "modify auth user admin password {{ admin_password }}"
+    commands: modify auth user admin password {{ admin_password }}
   register: change_password
   until: change_password is not failed
   retries: 5

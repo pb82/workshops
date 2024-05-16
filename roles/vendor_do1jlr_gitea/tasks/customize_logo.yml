@@ -6,7 +6,7 @@
     state: directory
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
-    mode: 'u=rwX,g=rX,o='
+    mode: u=rwX,g=rX,o=
   with_items:
     - "{{ gitea_custom }}/public"
     - "{{ gitea_custom }}/public/img"
@@ -18,7 +18,7 @@
     dest: "{{ gitea_custom }}/public/img/logo.svg"
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
-    mode: '0644'
+    mode: "0644"
   ignore_errors: true
 
 - name: transfer custom logo.png
@@ -28,7 +28,7 @@
     dest: "{{ gitea_custom }}/public/img/logo.png"
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
-    mode: '0644'
+    mode: "0644"
   ignore_errors: true
 
 - name: transfer custom favicon.png
@@ -38,7 +38,7 @@
     dest: "{{ gitea_custom }}/public/img/favicon.png"
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
-    mode: '0644'
+    mode: "0644"
   ignore_errors: true
 
 - name: transfer custom apple-touch-icon.png
@@ -48,5 +48,5 @@
     dest: "{{ gitea_custom }}/public/img/apple-touch-icon.png"
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
-    mode: '0644'
+    mode: "0644"
   ignore_errors: true

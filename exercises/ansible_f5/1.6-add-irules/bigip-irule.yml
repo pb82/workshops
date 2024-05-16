@@ -4,8 +4,7 @@
   connection: local
   gather_facts: false
   vars:
-    irules: ['irule1', 'irule2']
-
+    irules: [irule1, irule2]
   tasks:
     - name: ADD iRules
       f5networks.f5_modules.bigip_irule:
@@ -15,7 +14,7 @@
           password: "{{ansible_ssh_pass}}"
           server_port: 8443
           validate_certs: false
-        module: "ltm"
+        module: ltm
         name: "{{item}}"
         content: "{{lookup('file','{{item}}')}}"
       with_items: "{{irules}}"
@@ -28,5 +27,5 @@
           password: "{{ansible_ssh_pass}}"
           server_port: 8443
           validate_certs: false
-        name: "vip"
+        name: vip
         irules: "{{irules}}"

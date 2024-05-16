@@ -1,7 +1,7 @@
 ---
 - name: Install EPEL
   dnf:
-    name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm"
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
     state: present
     disable_gpg_check: true
 
@@ -35,7 +35,7 @@
     name:
       - awxkit
       - yamllint
-      - "requests==2.14.2"
+      - requests==2.14.2
       - ansible-navigator
       - ansible-lint
     state: latest

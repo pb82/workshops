@@ -2,8 +2,8 @@
 - name: Enable TCP port 9000 for php-fpm
   lineinfile:
     path: /etc/php-fpm.d/www.conf
-    regexp: '^listen ='
-    line: 'listen = 127.0.0.1:9000'
+    regexp: ^listen =
+    line: listen = 127.0.0.1:9000
   notify: restart php-fpm
 
 - name: Start Services
@@ -21,7 +21,7 @@
     path: /var/lib/php/session/
     owner: nginx
     group: nginx
-    mode: 0777
+    mode: "0777"
     state: directory
 
 - name: Create users directory on server
@@ -37,7 +37,7 @@
 - name: Copy files over to attendance node
   copy:
     src: "{{ item }}"
-    dest: "/usr/share/nginx/html/{{ item }}"
+    dest: /usr/share/nginx/html/{{ item }}
   loop:
     - redhat-ansible-logo.svg
     - redhat-logo.svg

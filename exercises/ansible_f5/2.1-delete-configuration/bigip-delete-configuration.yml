@@ -17,13 +17,13 @@
     - name: DELETE VIRTUAL SERVER
       f5networks.f5_modules.bigip_virtual_server:
         provider: "{{provider}}"
-        name: "vip"
+        name: vip
         state: absent
 
     - name: DELETE POOL
       bigip_pool:
         provider: "{{provider}}"
-        name: "http_pool"
+        name: http_pool
         state: absent
 
     - name: DELETE NODES

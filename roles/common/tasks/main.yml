@@ -3,14 +3,14 @@
   ansible.builtin.template:
     src: sshd_config.conf
     dest: /etc/ssh/sshd_config
-    validate: "sshd -t -f %s"
+    validate: sshd -t -f %s
   notify: restart ssh
 
 - name: Configure sudoers
   ansible.builtin.template:
     src: sudoers.conf
     dest: /etc/sudoers
-    validate: "visudo -cf %s"
+    validate: visudo -cf %s
   notify: restart ssh
 
 - name: Configure cloud.cfg

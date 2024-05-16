@@ -10,20 +10,20 @@
         state: stopped
       when: ansible_service_mgr == "systemd"
 
-    - name: "Create backup directory"
+    - name: Create backup directory
       become: true
       ansible.builtin.file:
         path: "{{ item }}"
         state: directory
         owner: "{{ gitea_user }}"
         group: "{{ gitea_group }}"
-        mode: 'u=rwx,g=rx,o='
+        mode: u=rwx,g=rx,o=
       with_items:
         - "{{ gitea_backup_location }}"
 
     - name: Backing up gitea before upgrade
       ansible.builtin.command:
-        cmd: "gitea dump -c /etc/gitea/gitea.ini"
+        cmd: gitea dump -c /etc/gitea/gitea.ini
         chdir: "{{ gitea_backup_location }}"
       become: true
       become_user: "{{ gitea_user }}"

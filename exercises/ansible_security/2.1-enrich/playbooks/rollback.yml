@@ -3,8 +3,8 @@
   hosts: snort
   become: true
   vars:
-    ids_provider: "snort"
-    ids_config_provider: "snort"
+    ids_provider: snort
+    ids_config_provider: snort
     ids_config_remote_log: false
     ids_config_remote_log_destination: "{{ hostvars['qradar']['private_ip'] }}"
     ids_config_remote_log_procotol: udp
@@ -13,7 +13,7 @@
   tasks:
     - name: import ids_config role
       include_role:
-        name: "ansible_security.ids_config"
+        name: ansible_security.ids_config
 
 - name: Remove Snort log source from QRadar
   hosts: qradar
@@ -23,10 +23,10 @@
   tasks:
     - name: Remove snort remote logging from QRadar
       qradar_log_source_management:
-        name: "Snort rsyslog source - {{ hostvars['snort']['private_ip'] }}"
-        type_name: "Snort Open Source IDS"
+        name: Snort rsyslog source - {{ hostvars['snort']['private_ip'] }}
+        type_name: Snort Open Source IDS
         state: absent
-        description: "Snort rsyslog source"
+        description: Snort rsyslog source
         identifier: "{{ hostvars['snort']['ansible_fqdn'] }}"
 
 - name: Configure Check Point to not send logs to QRadar
@@ -39,7 +39,7 @@
       vars:
         syslog_server: "{{ hostvars['qradar']['private_ip'] }}"
         # retrieve from checkpoint GUI, e.g. gw-abc123
-        checkpoint_server_name: "YOURSERVERNAME"
+        checkpoint_server_name: YOURSERVERNAME
         firewall_provider: checkpoint
 
 - name: Remove Check Point log source from QRadar
@@ -50,10 +50,10 @@
   tasks:
     - name: Remove Check Point remote logging from QRadar
       qradar_log_source_management:
-        name: "Check Point source - {{ hostvars['checkpoint']['private_ip'] }}"
-        type_name: "Check Point NGFW"
+        name: Check Point source - {{ hostvars['checkpoint']['private_ip'] }}
+        type_name: Check Point NGFW
         state: absent
-        description: "Check Point log source"
+        description: Check Point log source
         identifier: "{{ hostvars['checkpoint']['private_ip'] }}"
 
     - name: deploy the log source changes

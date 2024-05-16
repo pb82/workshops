@@ -8,7 +8,6 @@ controller_projects:
     scm_branch: ""
     scm_clean: true
     scm_update_on_launch: true
-    scm_credential: "git"
+    scm_credential: git
     update_project: true
     wait: true
-...

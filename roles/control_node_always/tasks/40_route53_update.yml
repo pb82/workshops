@@ -8,17 +8,17 @@
   awx.awx.tower_token:
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://localhost"
+    controller_host: https://localhost
     validate_certs: false
-    scope: "write"  # or "read" depending on your needs
+    scope: write # or "read" depending on your needs
   register: token_result
 
 - name: Print token_result to terminal
-  debug: 
+  debug:
     var: token_result
 
 - name: Print token_result.ansible_facts.controller_token.token to terminal
-  debug: 
+  debug:
     var: token_result.ansible_facts.controller_token.token
 
 - name: Set admin oauth2 token fact
@@ -28,10 +28,10 @@
 - name: Install route53-update.py in /usr/local/bin
   template:
     src: route53-update.py.j2
-    dest: "/usr/local/bin/route53-update.py"
-    owner: "root"
-    group: "root"
-    mode: '0744'
+    dest: /usr/local/bin/route53-update.py
+    owner: root
+    group: root
+    mode: "0744"
 
 - name: Apply route53 systemd service file
   template:
@@ -39,7 +39,7 @@
     dest: /etc/systemd/system/route53-update.service
     owner: "{{ username }}"
     group: wheel
-    mode: '0744'
+    mode: "0744"
 
 - name: enable route53-update service
   systemd:

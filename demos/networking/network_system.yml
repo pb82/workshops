@@ -5,7 +5,7 @@
   gather_facts: false
 
   vars:
-    site_domain_name: 'example.net'
+    site_domain_name: example.net
     network_name_servers:
       - 8.8.8.8
       - 8.8.4.4

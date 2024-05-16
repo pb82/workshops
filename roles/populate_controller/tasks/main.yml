@@ -25,18 +25,18 @@
     value: false
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
-    
+
 #### CREDENTIAL
 - name: add SSH credential into Automation controller
   awx.awx.credential:
-    name: "Workshop Credential"
+    name: Workshop Credential
     credential_type: Machine
-    organization: "Default"
+    organization: Default
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
     inputs:
       username: ec2-user
@@ -44,12 +44,12 @@
 
 - name: add controller credential into automation controller
   awx.awx.credential:
-    name: "Controller Credential"
+    name: Controller Credential
     credential_type: Red Hat Ansible Automation Platform
     organization: Default
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
     inputs:
       host: "{{ student }}.{{ ec2_name_prefix }}.{{ workshop_dns_zone }}"
@@ -60,11 +60,11 @@
 #### Inventory
 - name: create workshop inventory
   awx.awx.inventory:
-    name: "Workshop Inventory"
-    organization: "Default"
+    name: Workshop Inventory
+    organization: Default
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
   register: workshop_inventory
   until: workshop_inventory is success
@@ -97,7 +97,7 @@
     superuser: true
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 # Workshop specific execution environments
@@ -108,7 +108,7 @@
     pull: missing
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 - name: setup workshop specific controller information

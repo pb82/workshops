@@ -6,4 +6,3 @@ controller_organizations:
       - ah_certified
       - ah_community
     default_environment: supported
-...

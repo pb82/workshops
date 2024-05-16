@@ -15,19 +15,19 @@
   file:
     path: "{{ build_dir_path }}"
     state: directory
-    mode: 0755
+    mode: "0755"
 
 - name: Copy Dockerfile
   copy:
     src: files/Dockerfile
     dest: "{{ build_dir_path }}"
-    mode: 0644
+    mode: "0644"
 
 - name: Copy custom index.html
   template:
     src: templates/index.html.j2
     dest: "{{ build_dir_path }}/index.html"
-    mode: 0644
+    mode: "0644"
 
 - name: Build and Push OCI image
   podman_image:

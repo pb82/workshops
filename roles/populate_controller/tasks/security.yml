@@ -3,18 +3,18 @@
   ansible.builtin.set_fact:
     student_hosts: "{{ groups['security'] | select('search', 'student' ~ student_number ~ '-') | list }}"
 
-- name: Debug hosts for 
+- name: Debug hosts for
   ansible.builtin.debug:
     msg: "{{ student_hosts }}"
-  
+
 - name: Add devices into controller inventory
   awx.awx.host:
     name: "{{ hostvars[item].short_name }}"
     enabled: true
-    inventory: "Workshop Inventory"
+    inventory: Workshop Inventory
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
     variables:
       ansible_host: "{{ hostvars[item].ansible_host }}"
@@ -24,45 +24,45 @@
 
 - name: use COP controller_configuration collection
   include_role:
-    name: '{{ setup_controller }}'
+    name: "{{ setup_controller }}"
   loop:
-    - 'infra.controller_configuration.hosts'
-    - 'infra.controller_configuration.groups'
+    - infra.controller_configuration.hosts
+    - infra.controller_configuration.groups
   loop_control:
     loop_var: setup_controller
 
 # Teams
 - name: Create analyst team
   awx.awx.team:
-    name: "TeamSIEM"
-    description: "Analysts Team"
-    organization: "Default"
+    name: TeamSIEM
+    description: Analysts Team
+    organization: Default
     state: present
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 - name: Create IDS team
   awx.awx.team:
-    name: "TeamIDS"
-    description: "IDS Team"
-    organization: "Default"
+    name: TeamIDS
+    description: IDS Team
+    organization: Default
     state: present
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 - name: Create Firewall team
   awx.awx.team:
-    name: "TeamFIREWALL"
-    description: "Firewall Team"
-    organization: "Default"
+    name: TeamFIREWALL
+    description: Firewall Team
+    organization: Default
     state: present
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 # Users
@@ -77,7 +77,7 @@
     superuser: false
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 - name: Add user opsids
@@ -91,7 +91,7 @@
     superuser: false
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 - name: Add user opsfirewall
@@ -105,87 +105,87 @@
     superuser: false
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 # Assign users to default org
 - name: Ensure that user analyst belongs to the Default org
   awx.awx.role:
     user: analyst
-    organization: "Default"
+    organization: Default
     role: member
     state: present
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 - name: Ensure that user opsids belongs to the Default org
   awx.awx.role:
     user: opsids
-    organization: "Default"
+    organization: Default
     role: member
     state: present
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 - name: Ensure that user opsfirewall belongs to the Default org
   awx.awx.role:
     user: opsfirewall
-    organization: "Default"
+    organization: Default
     role: member
     state: present
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 # Teams assignment
 - name: Assign analyst to group TeamSIEM
   awx.awx.role:
     user: analyst
-    target_team: "TeamSIEM"
+    target_team: TeamSIEM
     role: member
     state: present
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 - name: Assign opsids to group TeamIDS
   awx.awx.role:
     user: opsids
-    target_team: "TeamIDS"
+    target_team: TeamIDS
     role: member
     state: present
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 - name: Assign opsfirewall to group TeamFirewall
   awx.awx.role:
     user: opsfirewall
-    target_team: "TeamFIREWALL"
+    target_team: TeamFIREWALL
     role: member
     state: present
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 # Add repository as project
 - name: Add git repository as Tower project
   awx.awx.project:
-    name: "Workshop Project"
-    organization: "Default"
+    name: Workshop Project
+    organization: Default
     scm_type: git
-    scm_url: "https://github.com/ansible-security/workshop-examples"
+    scm_url: https://github.com/ansible-security/workshop-examples
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
   register: add_repo
   until: add_repo is not failed
@@ -199,171 +199,171 @@
 # Job templates
 - name: Job template sending firewall logs to QRadar
   awx.awx.job_template:
-    name: "Send firewall logs to QRadar"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "cp_log.yml"
-    state: "present"
-    limit: "checkpoint"
+    name: Send firewall logs to QRadar
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: cp_log.yml
+    state: present
+    limit: checkpoint
     execution_environment: "{{ workshop_type }} workshop execution environment"
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     use_fact_cache: true
     validate_certs: false
 
 - name: Job template sending IDPS logs to QRadar
   awx.awx.job_template:
-    name: "Send IDPS logs to QRadar"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "idps_log.yml"
-    state: "present"
-    limit: "snort"
-    credential: "Workshop Credential"
+    name: Send IDPS logs to QRadar
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: idps_log.yml
+    state: present
+    limit: snort
+    credential: Workshop Credential
     become_enabled: true
     execution_environment: "{{ workshop_type }} workshop execution environment"
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     use_fact_cache: true
     validate_certs: false
 
 - name: Job template accepting firewall logs in QRadar
   awx.awx.job_template:
-    name: "Accept firewall logs in QRadar"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "qradar_cp_log.yml"
-    state: "present"
-    limit: "qradar"
+    name: Accept firewall logs in QRadar
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: qradar_cp_log.yml
+    state: present
+    limit: qradar
     execution_environment: "{{ workshop_type }} workshop execution environment"
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     use_fact_cache: true
     validate_certs: false
 
 - name: Job template accepting IDPS logs in QRadar
   awx.awx.job_template:
-    name: "Accept IDPS logs in QRadar"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "qradar_snort_log.yml"
-    state: "present"
-    limit: "qradar"
+    name: Accept IDPS logs in QRadar
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: qradar_snort_log.yml
+    state: present
+    limit: qradar
     execution_environment: "{{ workshop_type }} workshop execution environment"
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     use_fact_cache: true
     validate_certs: false
 
 - name: Job template rolling back everything
   awx.awx.job_template:
-    name: "Roll back all changes"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "rollback.yml"
-    state: "present"
-    credential: "Workshop Credential"
+    name: Roll back all changes
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: rollback.yml
+    state: present
+    credential: Workshop Credential
     execution_environment: "{{ workshop_type }} workshop execution environment"
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     use_fact_cache: true
     validate_certs: false
 
 - name: Job template adding DDOS IDPS rule
   awx.awx.job_template:
-    name: "Add IDPS rule"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "snort_rule.yml"
-    state: "present"
-    limit: "snort"
-    credential: "Workshop Credential"
+    name: Add IDPS rule
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: snort_rule.yml
+    state: present
+    limit: snort
+    credential: Workshop Credential
     become_enabled: true
     survey_enabled: true
     survey_spec: "{{ lookup('template', 'security_survey_ids_rule.json') }}"
     execution_environment: "{{ workshop_type }} workshop execution environment"
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     use_fact_cache: true
     validate_certs: false
 
 - name: Job template adding ddos attack simulation
   awx.awx.job_template:
-    name: "Start DDOS attack simulation"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "ddos_attack_simulation.yml"
-    state: "present"
-    limit: "attacker"
-    credential: "Workshop Credential"
+    name: Start DDOS attack simulation
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: ddos_attack_simulation.yml
+    state: present
+    limit: attacker
+    credential: Workshop Credential
     become_enabled: true
     execution_environment: "{{ workshop_type }} workshop execution environment"
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     use_fact_cache: true
     validate_certs: false
 
 - name: Job template stopping ddos attack simulation
   awx.awx.job_template:
-    name: "Stop DDOS attack simulation"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "ddos_stop_simulation.yml"
-    state: "present"
-    limit: "attacker"
-    credential: "Workshop Credential"
+    name: Stop DDOS attack simulation
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: ddos_stop_simulation.yml
+    state: present
+    limit: attacker
+    credential: Workshop Credential
     become_enabled: true
     execution_environment: "{{ workshop_type }} workshop execution environment"
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     use_fact_cache: true
     validate_certs: false
 
 - name: Job template adding whitelist entry for attacker
   awx.awx.job_template:
-    name: "Whitelist attacker"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "whitelist_attacker.yml"
-    state: "present"
-    limit: "checkpoint"
+    name: Whitelist attacker
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: whitelist_attacker.yml
+    state: present
+    limit: checkpoint
     execution_environment: "{{ workshop_type }} workshop execution environment"
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     use_fact_cache: true
     validate_certs: false
 
 - name: Job template adding blacklist entry for attacker
   awx.awx.job_template:
-    name: "Blacklist attacker"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "blacklist_attacker.yml"
-    state: "present"
-    limit: "checkpoint"
+    name: Blacklist attacker
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: blacklist_attacker.yml
+    state: present
+    limit: checkpoint
     execution_environment: "{{ workshop_type }} workshop execution environment"
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     use_fact_cache: true
     validate_certs: false
 
@@ -376,12 +376,12 @@
     state: present
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
   loop:
-    - "Send firewall logs to QRadar"
-    - "Whitelist attacker"
-    - "Blacklist attacker"
+    - Send firewall logs to QRadar
+    - Whitelist attacker
+    - Blacklist attacker
 
 - name: Ensure that opsfirewall has admin rights for own jobs
   awx.awx.role:
@@ -391,11 +391,11 @@
     state: present
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
   loop:
-    - "Send IDPS logs to QRadar"
-    - "Add IDPS rule"
+    - Send IDPS logs to QRadar
+    - Add IDPS rule
 
 - name: Ensure that analyst has admin rights for own jobs
   awx.awx.role:
@@ -405,11 +405,11 @@
     state: present
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
   loop:
-    - "Accept firewall logs in QRadar"
-    - "Accept IDPS logs in QRadar"
+    - Accept firewall logs in QRadar
+    - Accept IDPS logs in QRadar
 
 - name: Ensure that analyst can execute IDPS job
   awx.awx.role:
@@ -419,8 +419,8 @@
     state: present
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
   loop:
-    - "Roll back all changes"
-    - "Send IDPS logs to QRadar"
+    - Roll back all changes
+    - Send IDPS logs to QRadar

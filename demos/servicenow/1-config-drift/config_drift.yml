@@ -4,13 +4,12 @@
   connection: local
   gather_facts: false
   tasks:
-
     - name: IMPORT LOGIN CREDENTIALS FOR SERVICENOW
       include_vars: "{{lookup('first_found', login_info)}}"
       vars:
         login_info:
-          - 'private.yml'
-          - 'login_info.yml'
+          - private.yml
+          - login_info.yml
 
     - name: configure interface settings
       ios_config:
@@ -34,10 +33,10 @@
             state: present
             table: incident
             data:
-              short_description: "CONFIG OUT OF COMPLIANCE ON {{inventory_hostname}}"
+              short_description: CONFIG OUT OF COMPLIANCE ON {{inventory_hostname}}
               severity: 3
               priority: 2
-              caller_id: "System Administrator"
+              caller_id: System Administrator
               comments: "The configuration:\n--------\n {% for item in changeFlag.updates %}{{item}}\n{% endfor %}\n--------\n is missing on {{inventory_hostname}}"
           register: snow_var
           delegate_to: localhost

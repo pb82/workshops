@@ -7,14 +7,14 @@
   assert:
     that:
       - py_cmd.stdout is version('1.7', operator='ge')
-    msg: "boto3 >= 1.7 is required."
+    msg: boto3 >= 1.7 is required.
 
 - name: check route53 information
   when: dns_type == "aws"
   block:
     - name: check for underscores in workshop name
       fail:
-        msg: "Amazon AWS does not allow underscores _ for s3 websites, please see https://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html"
+        msg: Amazon AWS does not allow underscores _ for s3 websites, please see https://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html
       when:
         - "'_' in ec2_name_prefix"
 
@@ -30,8 +30,8 @@
         that:
           - test.zone_id is not none
         msg:
-          - "You must have a valid route53 zone configured for workshop_dns_zone"
-          - "Right now the workshop_dns_zone is {{workshop_dns_zone}}"
+          - You must have a valid route53 zone configured for workshop_dns_zone
+          - Right now the workshop_dns_zone is {{workshop_dns_zone}}
 
 - name: Find available AZ for region {{ ec2_region }}
   amazon.aws.aws_az_info:
@@ -71,4 +71,4 @@
 
 - name: save account id of AWS user
   set_fact:
-    aws_account: '{{ whoami.account }}'
+    aws_account: "{{ whoami.account }}"

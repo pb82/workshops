@@ -13,4 +13,4 @@
 
     - name: Display serial number
       ansible.builtin.debug:
-        msg: "The serial number is:{{ ansible_net_serialnum }}"
+        msg: The serial number is:{{ ansible_net_serialnum }}

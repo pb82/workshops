@@ -20,7 +20,7 @@
     - controllerinstall|bool
 
 - name: install controller if knob is set
-  include_tasks: "12_controller.yml"
+  include_tasks: 12_controller.yml
   when:
     - controllerinstall is defined
     - controllerinstall|bool
@@ -31,5 +31,3 @@
 
 - name: common workshop setup for control node
   include_tasks: 20_all_workshop.yml
-
-

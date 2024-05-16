@@ -13,7 +13,7 @@
   connection: local
   gather_facts: false
   vars:
-    as3_uri: "https://github.com/F5Networks/f5-appsvcs-extension/releases"
+    as3_uri: https://github.com/F5Networks/f5-appsvcs-extension/releases
   tasks:
     - include_role:
         name: ../../roles/f5_setup
@@ -26,11 +26,11 @@
   tasks:
     - name: Ensure .config/containers directory is present in student home directory
       ansible.builtin.file:
-        path: "/home/student/.config/containers"
+        path: /home/student/.config/containers
         state: directory
         owner: student
         group: student
-        mode: 0755
+        mode: "0755"
 
     - name: Copy containers.conf
       ansible.builtin.copy:
@@ -38,4 +38,4 @@
         dest: /home/student/.config/containers/containers.conf
         owner: student
         group: student
-        mode: 0644
+        mode: "0644"

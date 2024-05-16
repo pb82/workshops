@@ -9,7 +9,7 @@
     exact_count: "{{ student_total|int }}"
     state: running
     filters:
-      "tag:Workshop_ansible": "{{ ec2_name_prefix }}-ansible-{{ sequence }}"
+      tag:Workshop_ansible: "{{ ec2_name_prefix }}-ansible-{{ sequence }}"
       instance-state-name: running
     tags:
       Workshop_ansible: "{{ ec2_name_prefix }}-ansible-{{ sequence }}"
@@ -17,11 +17,11 @@
       Workshop_type: "{{ workshop_type }}"
       AWS_USERNAME: "{{ aws_user }}"
       owner: "{{ aws_user }}"
-      Info: "AWS_USERNAME that provisioned this-> {{ aws_user }}"
-      Ansible_Workshops: "This was provisioned through the ansible workshops provisioner"
+      Info: AWS_USERNAME that provisioned this-> {{ aws_user }}
+      Ansible_Workshops: This was provisioned through the ansible workshops provisioner
       Students: "{{ student_total|int }}"
       username: "{{ ec2_info[control_type].username }}"
-      short_name: "ansible-{{ sequence }}"
+      short_name: ansible-{{ sequence }}
       ansible-workshops: "true"
     wait: "{{ ec2_wait }}"
     network:
@@ -42,7 +42,7 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Workshop_ansible": "{{ ec2_name_prefix }}-ansible-{{ sequence }}"
+      tag:Workshop_ansible: "{{ ec2_name_prefix }}-ansible-{{ sequence }}"
   register: control_output
 
 - name: Ensure tags are present
@@ -53,7 +53,7 @@
     tags:
       Name: "{{ ec2_name_prefix }}-student{{ item.0 + 1 }}-ansible-{{ sequence }}"
       Index: "{{ item[0] }}"
-      Student: "student{{ item.0 + 1 }}"
+      Student: student{{ item.0 + 1 }}
       dns: "{% if dns_type != 'none' %}student{{ item.0 + 1 }}.{{ ec2_name_prefix|lower }}.{{ workshop_dns_zone }} {% else %} none {% endif %}"
       launch_time: "{{ item.1.launch_time }}"
   with_indexed_items:
@@ -69,7 +69,7 @@
 
     - name: Create VPC Lock Down role
       community.aws.iam_role:
-        name: "VPCLockDown_{{ ec2_name_prefix }}_student{{ item }}"
+        name: VPCLockDown_{{ ec2_name_prefix }}_student{{ item }}
         assume_role_policy_document: "{{ lookup('file','AssumeRole_policy.json') }}"
         create_instance_profile: true
         description: VPC Lockdown role for "{{ ec2_name_prefix }}" workshop
@@ -77,7 +77,7 @@
 
     - name: Create control node instance role
       community.aws.iam_role:
-        name: "ControlNode_{{ ec2_name_prefix }}_student{{ item }}"
+        name: ControlNode_{{ ec2_name_prefix }}_student{{ item }}
         assume_role_policy_document: "{{ lookup('file','AssumeRole_policy.json') }}"
         create_instance_profile: true
         description: Control node instance role for "{{ ec2_name_prefix }}" workshop
@@ -86,8 +86,8 @@
     - name: Generate IAM policy for control node IAM instance role
       community.aws.iam_policy:
         iam_type: role
-        iam_name: "ControlNode_{{ ec2_name_prefix }}_student{{ item }}"
-        policy_name: "IAMPolicy_{{ ec2_name_prefix }}_student{{ item }}"
+        iam_name: ControlNode_{{ ec2_name_prefix }}_student{{ item }}
+        policy_name: IAMPolicy_{{ ec2_name_prefix }}_student{{ item }}
         state: present
         policy_json: "{{ lookup( 'template', 'iam_vpc_lockdown_policy.json.j2') }}"
       loop: "{{ range(1, student_total|int + 1)|list }}"
@@ -98,7 +98,7 @@
       amazon.aws.ec2_instance:
         instance_ids: "{{ item.1.instance_id }}"
         region: "{{ ec2_region }}"
-        instance_role: "ControlNode_{{ ec2_name_prefix }}_student{{ item.0 + 1 }}"
+        instance_role: ControlNode_{{ ec2_name_prefix }}_student{{ item.0 + 1 }}
         state: running
         wait: true
       with_indexed_items:
@@ -115,4 +115,3 @@
       when: control_output.instances|length > 0
 
   when: tower_node_aws_api_access|default(false)|bool
-...

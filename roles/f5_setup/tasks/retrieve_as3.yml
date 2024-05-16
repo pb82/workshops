@@ -32,4 +32,4 @@
     - name: Grab AS3 RPM from github
       ansible.builtin.get_url:
         url: "{{ as3_release_rpm_url }}"
-        dest: "~/"
+        dest: ~/

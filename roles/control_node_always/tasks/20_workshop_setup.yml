@@ -7,23 +7,23 @@
 - name: template ansible-navigator.yml into home directory
   template:
     src: ansible-navigator.yml.j2
-    dest: "/home/{{ username }}/.ansible-navigator.yml"
+    dest: /home/{{ username }}/.ansible-navigator.yml
     owner: "{{ username }}"
     group: "{{ username }}"
 
 - name: Create .ssh directory if it does not exist
   file:
-    path: "/home/{{ username }}/.ssh"
+    path: /home/{{ username }}/.ssh
     state: directory
-    mode: '700'
+    mode: "700"
 
 - name: Put ssh-key in proper spot for student
   copy:
     src: "{{ output_dir }}/{{ ec2_name_prefix }}-private.pem"
-    dest: "/home/{{ username }}/.ssh/id_rsa"
+    dest: /home/{{ username }}/.ssh/id_rsa
     owner: "{{ username }}"
     group: "{{ username }}"
-    mode: 0400
+    mode: "0400"
 
 - name: clean out /tmp/workshops
   file:
@@ -48,7 +48,7 @@
     owner: "{{ username }}"
     group: "{{ username }}"
     local_follow: true
-  ignore_errors: true  # Required for testing local development
+  ignore_errors: true # Required for testing local development
 
 - name: Create lab inventory directory
   file:
@@ -74,7 +74,7 @@
 - name: Install ansible.cfg in home directory
   template:
     src: ansible.cfg.j2
-    dest: "/etc/ansible/ansible.cfg"
+    dest: /etc/ansible/ansible.cfg
 
 # Pull specific EE for each workshop based on workshop name
 - name: Pull execution environment for {{ workshop_type }} workshop

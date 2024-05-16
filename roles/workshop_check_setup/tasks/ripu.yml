@@ -6,4 +6,4 @@
       - rhel7 is defined
       - rhel8 is defined
       - tower_node_aws_api_access is defined
-    fail_msg: "One or more required keys are missing!"
+    fail_msg: One or more required keys are missing!

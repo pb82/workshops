@@ -1,6 +1,6 @@
 ---
 - name: Restart code-server
   ansible.builtin.systemd:
-    name: "code-server@{{ username }}"
-    enabled: yes
+    name: code-server@{{ username }}
+    enabled: true
     state: restarted

@@ -7,7 +7,7 @@ controller_validate_certs: false
 ah_host: "{{ ah_hostname | default(groups['automationhub'][0]) }}"
 ah_username: "{{ ah_user | default('admin') }}"
 ah_password: "{{ ah_pass }}"
-ah_path_prefix: 'galaxy'  # this is for private automation hub
+ah_path_prefix: galaxy # this is for private automation hub
 ah_validate_certs: false
 
 ee_registry_username: "{{ ah_username }}"
@@ -18,4 +18,3 @@ ee_validate_certs: false
 ee_base_registry: "{{ ah_host }}"
 ee_base_registry_username: "{{ ah_username }}"
 ee_base_registry_password: "{{ ah_password }}"
-...

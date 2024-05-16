@@ -7,13 +7,13 @@
 - name: Replace add_header X-Frame-Options DENY with CSP frame-ancestors self in automation-controller.nginx.conf
   ansible.builtin.lineinfile:
     path: /etc/nginx/conf.d/automation-controller.nginx.conf
-    regexp: '^(.*)add_header X-Frame-Options \"DENY\"\;'
+    regexp: ^(.*)add_header X-Frame-Options \"DENY\"\;
     line: >-
       \1add_header Content-Security-Policy "frame-ancestors 'self';";
-    backrefs: yes
+    backrefs: true
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   register: add_header_csp
   retries: 10
   until: add_header_csp is not changed
@@ -22,13 +22,13 @@
 - name: Replace add_header X-Frame-Options DENY with CSP frame-ancestors self in /etc/nginx/nginx.conf
   ansible.builtin.lineinfile:
     path: /etc/nginx/nginx.conf
-    regexp: '^(.*)add_header X-Frame-Options \"DENY\"\;'
+    regexp: ^(.*)add_header X-Frame-Options \"DENY\"\;
     line: >-
       \1add_header Content-Security-Policy "frame-ancestors 'self';";
-    backrefs: yes
+    backrefs: true
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
   register: add_header_csp
   retries: 10
   until: add_header_csp is not changed
@@ -40,7 +40,7 @@
     dest: /etc/systemd/system/code-server.service
     owner: "{{ username }}"
     group: wheel
-    mode: '0744'
+    mode: "0744"
 
 - name: daemon-reload, enable and start code-server
   ansible.builtin.systemd:

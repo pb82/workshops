@@ -21,7 +21,7 @@
     dest: /etc/nginx/{{ item }}
     state: directory
     owner: root
-    mode: 0755
+    mode: "0755"
   with_items:
     - sites-available.d
     - sites-enabled.d

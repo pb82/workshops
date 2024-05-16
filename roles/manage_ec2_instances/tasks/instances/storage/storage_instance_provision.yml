@@ -17,10 +17,10 @@
       guid: "{{ ec2_name_prefix }}"
       AWS_USERNAME: "{{ aws_user }}"
       owner: "{{ aws_user }}"
-      Info: "AWS_USERNAME that provisioned this-> {{ aws_user }}"
-      Linklight: "This was provisioned through the linklight provisioner"
+      Info: AWS_USERNAME that provisioned this-> {{ aws_user }}
+      Linklight: This was provisioned through the linklight provisioner
       Students: "{{ student_total|int }}"
-      short_name: "netapp"
+      short_name: netapp
       username: "{{ ec2_info[rhel].username }}"
       ansible-workshops: "true"
     wait: "{{ ec2_wait }}"
@@ -41,10 +41,9 @@
     tags:
       Name: "{{ ec2_name_prefix }}-student{{ item.0 + 1 }}-netapp"
       Index: "{{ item[0] }}"
-      Student: "student{{ item.0 + 1 }}"
+      Student: student{{ item.0 + 1 }}
       launch_time: "{{ item.1.launch_time }}"
       ansible-workshops: "true"
   with_indexed_items:
     - "{{ netapp_output.instances }}"
   when: netapp_output.instance_ids is not none
-...

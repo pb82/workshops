@@ -1,7 +1,7 @@
 ---
 - name: template inventory file for Ansible Controller Install
   template:
-    src: "controller_install.j2"
+    src: controller_install.j2
     dest: "{{ aap_dir }}/inventory"
   when: create_cluster is not defined or not create_cluster|bool
 
@@ -17,21 +17,21 @@
     dest: "{{ aap_dir }}"
     owner: "{{ username }}"
     group: "{{ username }}"
-    mode: '0644'
+    mode: "0644"
 
 - name: Create {{ aap_dir }}/config directory
   ansible.builtin.file:
     path: "{{ aap_dir }}/config"
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Copy users.yml to {{ aap_dir }}/config
   ansible.builtin.copy:
-    src: "users.yml"
+    src: users.yml
     dest: "{{ aap_dir }}/config"
     owner: "{{ username }}"
     group: "{{ username }}"
-    mode: '0644'
+    mode: "0644"
 
 - name: run the Automation Controller installer
   become: true
@@ -61,7 +61,7 @@
 
 - name: Display /api/v2/ping results
   debug:
-    msg: '{{ check2.json }}'
+    msg: "{{ check2.json }}"
 
 # - name: load license block
 #   block:
@@ -100,10 +100,10 @@
 ## Execution environments
 - name: create container registry credential
   awx.awx.credential:
-    name: '{{ ee_registry_name }} credential'
+    name: "{{ ee_registry_name }} credential"
     organization: Default
     credential_type: Container Registry
-    controller_host: "https://localhost"
+    controller_host: https://localhost
     controller_username: admin
     controller_password: "{{ admin_password }}"
     validate_certs: false
@@ -114,13 +114,13 @@
 
 - name: update default EE to use credential
   awx.awx.execution_environment:
-    name: "Default execution environment"
+    name: Default execution environment
     image: "{{ ee_default_image }}"
     pull: missing
-    credential: "registry.redhat.io credential"
+    credential: registry.redhat.io credential
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://localhost"
+    controller_host: https://localhost
     validate_certs: false
   register: ee_check
   until: ee_check is not failed

@@ -18,10 +18,10 @@
       guid: "{{ ec2_name_prefix }}"
       AWS_USERNAME: "{{ aws_user }}"
       owner: "{{ aws_user }}"
-      Info: "AWS_USERNAME that provisioned this-> {{ aws_user }}"
-      Linklight: "This was provisioned through the linklight provisioner"
+      Info: AWS_USERNAME that provisioned this-> {{ aws_user }}
+      Linklight: This was provisioned through the linklight provisioner
       Students: "{{ student_total|int }}"
-      short_name: "dev_web1"
+      short_name: dev_web1
       username: "{{ ec2_info[rhel].username }}"
       Devops_tag: dev_web1
       ansible-workshops: "true"
@@ -42,7 +42,7 @@
     tags:
       Name: "{{ ec2_name_prefix }}-student{{ item.0 + 1 }}-node1"
       Index: "{{ item[0] }}"
-      Student: "student{{ item.0 + 1 }}"
+      Student: student{{ item.0 + 1 }}
       launch_time: "{{ item.1.launch_time }}"
   with_indexed_items:
     - "{{ node1_output.instance_ids }}"
@@ -67,10 +67,10 @@
       guid: "{{ ec2_name_prefix }}"
       AWS_USERNAME: "{{ aws_user }}"
       owner: "{{ aws_user }}"
-      Info: "AWS_USERNAME that provisioned this-> {{ aws_user }}"
-      Linklight: "This was provisioned through the linklight provisioner"
+      Info: AWS_USERNAME that provisioned this-> {{ aws_user }}
+      Linklight: This was provisioned through the linklight provisioner
       Students: "{{ student_total|int }}"
-      short_name: "dev_web2"
+      short_name: dev_web2
       username: "{{ ec2_info[rhel].username }}"
       Devops_tag: dev_web2
       ansible-workshops: "true"
@@ -91,7 +91,7 @@
     tags:
       Name: "{{ ec2_name_prefix }}-student{{ item.0 + 1 }}-node2"
       Index: "{{ item[0] }}"
-      Student: "student{{ item.0 + 1 }}"
+      Student: student{{ item.0 + 1 }}
       launch_time: "{{ item.1.launch_time }}"
   with_indexed_items:
     - "{{ node2_output.instance_ids }}"
@@ -116,10 +116,10 @@
       guid: "{{ ec2_name_prefix }}"
       AWS_USERNAME: "{{ aws_user }}"
       owner: "{{ aws_user }}"
-      Info: "AWS_USERNAME that provisioned this-> {{ aws_user }}"
-      Linklight: "This was provisioned through the linklight provisioner"
+      Info: AWS_USERNAME that provisioned this-> {{ aws_user }}
+      Linklight: This was provisioned through the linklight provisioner
       Students: "{{ student_total|int }}"
-      short_name: "prod_web1"
+      short_name: prod_web1
       username: "{{ ec2_info[rhel].username }}"
       Devops_tag: prod_web1
       ansible-workshops: "true"
@@ -140,7 +140,7 @@
     tags:
       Name: "{{ ec2_name_prefix }}-student{{ item.0 + 1 }}-node3"
       Index: "{{ item[0] }}"
-      Student: "student{{ item.0 + 1 }}"
+      Student: student{{ item.0 + 1 }}
       launch_time: "{{ item.1.launch_time }}"
   with_indexed_items:
     - "{{ node3_output.instance_ids }}"
@@ -165,10 +165,10 @@
       guid: "{{ ec2_name_prefix }}"
       AWS_USERNAME: "{{ aws_user }}"
       owner: "{{ aws_user }}"
-      Info: "AWS_USERNAME that provisioned this-> {{ aws_user }}"
-      Linklight: "This was provisioned through the linklight provisioner"
+      Info: AWS_USERNAME that provisioned this-> {{ aws_user }}
+      Linklight: This was provisioned through the linklight provisioner
       Students: "{{ student_total|int }}"
-      short_name: "prod_web2"
+      short_name: prod_web2
       username: "{{ ec2_info[rhel].username }}"
       Devops_tag: prod_web2
       ansible-workshops: "true"
@@ -189,9 +189,8 @@
     tags:
       Name: "{{ ec2_name_prefix }}-student{{ item.0 + 1 }}-node4"
       Index: "{{ item[0] }}"
-      Student: "student{{ item.0 + 1 }}"
+      Student: student{{ item.0 + 1 }}
       launch_time: "{{ item.1.launch_time }}"
   with_indexed_items:
     - "{{ node4_output.instance_ids }}"
   when: node4_output.instance_ids is not none
-...

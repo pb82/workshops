@@ -9,7 +9,7 @@
     exact_count: "{{ student_total|int }}"
     state: running
     filters:
-      "tag:Workshop_splunk": "{{ ec2_name_prefix }}-splunk"
+      tag:Workshop_splunk: "{{ ec2_name_prefix }}-splunk"
       instance-state-name: running
     tags:
       Workshop_splunk: "{{ ec2_name_prefix }}-splunk"
@@ -17,11 +17,11 @@
       Workshop_type: "{{ workshop_type }}"
       AWS_USERNAME: "{{ aws_user }}"
       owner: "{{ aws_user }}"
-      Info: "AWS_USERNAME that provisioned this-> {{ aws_user }}"
-      Ansible_Workshops: "This was provisioned through the ansible workshops provisioner"
+      Info: AWS_USERNAME that provisioned this-> {{ aws_user }}
+      Ansible_Workshops: This was provisioned through the ansible workshops provisioner
       Students: "{{ student_total|int }}"
       username: '{{ ec2_info["splunk_enterprise"]["username"] }}'
-      short_name: "splunk"
+      short_name: splunk
       ansible-workshops: "true"
     wait: "{{ ec2_wait }}"
     network:
@@ -39,4 +39,3 @@
   async: "{{ async_timeout_seconds }}"
   poll: 0
   register: splunk_async
-...
