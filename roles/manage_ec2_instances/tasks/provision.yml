@@ -1,18 +1,18 @@
 ---
 - name: ensure workshop folder {{ ec2_name_prefix }} exists
-  file:
+  ansible.builtin.file:
     path: "{{ playbook_dir }}/{{ ec2_name_prefix }}"
     state: directory
 
 ## These AWS resources are used for every workshop type
 ## This includes VPC, subnet, Security Group, Internet Gateway and route table
-- name: provision aws resources
-  include_tasks: resources/resources.yml
 
-## This duplicates the above when network workshop uses 2 VPCs
+- name: provision aws resources
+  ansible.builtin.include_tasks: resources/resources.yml
+
 - name: provision networking aws resources
-  include_tasks: resources/resources_{{workshop_type}}.yml
   when: workshop_type == 'network' or workshop_type == 'demo'
+  ansible.builtin.include_tasks: resources/resources_{{workshop_type}}.yml
 
 - name: find ami if no ami provided
   when: not pre_build|bool
@@ -22,12 +22,12 @@
         region: "{{ ec2_region }}"
         owners: "{{ ec2_info[control_type].owners }}"
         filters:
-          name: "{{ ec2_info[control_type].filter }}"
-          architecture: "{{ ec2_info[control_type].architecture }}"
+          name: '{{ ec2_info[control_type].filter }}'
+          architecture: '{{ ec2_info[control_type].architecture }}'
       register: amis
 
     - name: save ami for ansible control node
-      set_fact:
+      ansible.builtin.set_fact:
         ansible_control_node_ami: >
           {{ amis.images | selectattr('name', 'defined') | sort(attribute='name') | last }}
 
@@ -39,69 +39,71 @@
         region: "{{ ec2_region }}"
         owners: "{{ ec2_info.control_type_pre_build.owners }}"
         filters:
-          name: "{{ ec2_info.control_type_pre_build.filter }}"
-          architecture: "{{ ec2_info.control_type_pre_build.architecture }}"
+          name: '{{ ec2_info.control_type_pre_build.filter }}'
+          architecture: '{{ ec2_info.control_type_pre_build.architecture }}'
       register: amis
 
     - name: save ami for ansible control node
-      set_fact:
+      ansible.builtin.set_fact:
         ansible_control_node_ami: >
           {{ amis.images | selectattr('name', 'defined') | sort(attribute='name') | last }}  
 
     - name: check if we have access to pre_build AMI images
-      include_tasks: check_prebuild.yml
-  
+      ansible.builtin.include_tasks: check_prebuild.yml
+
 - name: enforce major and minor version are at least RHEL 8.4
-  assert:
-    that:
-      - ansible_control_node_ami.name[7]|int >= 4
-      - ansible_control_node_ami.name[5]|int >= 8
-    msg: "AWS ec2 image retrieved will not work with AAP 2, we need at least RHEL 8.4"
   when:
-    - not pre_build|bool
-    - control_type == "rhel8-tower"
+  - not pre_build|bool
+  - control_type == "rhel8-tower"
+  ansible.builtin.assert:
+    that:
+    - ansible_control_node_ami.name[7]|int >= 4
+    - ansible_control_node_ami.name[5]|int >= 8
+    msg: "AWS ec2 image retrieved will not work with AAP 2, we need at least RHEL 8.4"
 
 - name: enforce major and minor version are at least RHEL 9.2
-  assert:
-    that:
-      - ansible_control_node_ami.name[7]|int >= 2
-      - ansible_control_node_ami.name[5]|int >= 9
-    msg: "AWS ec2 image retrieved will not work with AAP 2, we need at least RHEL 9.2"
   when:
-    - not pre_build|bool
-    - control_type == "rhel9-controller"
+  - not pre_build|bool
+  - control_type == "rhel9-controller"
+  ansible.builtin.assert:
+    that:
+    - ansible_control_node_ami.name[7]|int >= 2
+    - ansible_control_node_ami.name[5]|int >= 9
+    msg: "AWS ec2 image retrieved will not work with AAP 2, we need at least RHEL 9.2"
 
 - name: Create the control clusters
-  include_tasks: cluster_instances.yml
   loop: "{{ range(1, control_nodes|default(1) + 1 ) | list }}"
   loop_control:
     loop_var: sequence
+  ansible.builtin.include_tasks: cluster_instances.yml
 
-## create instance that will host login page
 - name: configure attendance host
-  include_tasks: 'attendance.yml'
   when: attendance|bool
 
 ## create private automation hub
+  ansible.builtin.include_tasks: 'attendance.yml'
+
 - name: configure automation hub host
-  include_tasks: 'automation_hub.yml'
   when: automation_hub|bool
 
 ## find AMI - amazon machine images dynamically
+  ansible.builtin.include_tasks: 'automation_hub.yml'
+
 - name: find correct AMI
-  include_tasks: 'ami_find/ami_find_{{ workshop_type }}.yml'
+  ansible.builtin.include_tasks: 'ami_find/ami_find_{{ workshop_type }}.yml'
 
 - name: check if we have access to pre_build hub AMI images
-  include_tasks: check_prebuild_hub.yml
   when: automation_hub|bool and pre_build|bool
 
 ## Instance creation
+  ansible.builtin.include_tasks: check_prebuild_hub.yml
+
 - name: provision workshop instances
-  include_tasks: 'instances/instances_{{ workshop_type }}.yml'
+  ansible.builtin.include_tasks: 'instances/instances_{{ workshop_type }}.yml'
 
 - name: create instructor_inventory, and student files
-  include_tasks: create_inventory.yml
+  ansible.builtin.include_tasks: create_inventory.yml
 
 - name: create cockpit/machines.d webui definition file
-  include_tasks: cockpit_machines.yml
   when: workshop_type == "ripu"
+  ansible.builtin.include_tasks: cockpit_machines.yml

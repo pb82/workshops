@@ -58,12 +58,12 @@
     checksum_algorithm: sha256
   register: stat_var
   when:
-    - stat_var.stat.checksum is undefined
-    - stat_var.stat.lnk_source is defined
+  - stat_var.stat.checksum is undefined
+  - stat_var.stat.lnk_source is defined
 
 - name: Verify sha256sum of aap.tar.gz
   ansible.builtin.fail:
     msg: Failure, sha256sum does not match
   when:
-    - stat_var.stat.checksum is defined
-    - stat_var.stat.checksum != provided_sha_value
+  - stat_var.stat.checksum is defined
+  - stat_var.stat.checksum != provided_sha_value

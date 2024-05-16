@@ -12,7 +12,6 @@
 
 - name: Install Chromium
   chocolatey.chocolatey.win_chocolatey:
-    name: "{{ item }}"
-    ignore_checksums: true
-  with_items:
+    name:
     - chromium
+    ignore_checksums: true

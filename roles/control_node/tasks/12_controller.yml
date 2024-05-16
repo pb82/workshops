@@ -1,15 +1,15 @@
 ---
 - name: template inventory file for Ansible Controller Install
-  template:
+  when: create_cluster is not defined or not create_cluster|bool
+  ansible.builtin.template:
     src: "controller_install.j2"
     dest: "{{ aap_dir }}/inventory"
-  when: create_cluster is not defined or not create_cluster|bool
 
 - name: template inventory file for Automation Controller Install cluster
-  template:
+  when: create_cluster is defined and create_cluster|bool
+  ansible.builtin.template:
     src: tower_cluster_install.j2
     dest: "{{ aap_dir }}/inventory"
-  when: create_cluster is defined and create_cluster|bool
 
 - name: Copy manifest.zip to {{ app_dir }}
   ansible.builtin.copy:
@@ -37,30 +37,30 @@
   become: true
   become_user: ec2-user
   environment:
-    ANSIBLE_COLLECTIONS_PATH: "{{ aap_dir }}/collections"
-  shell: "{{ controller_install_command }}"
+    ANSIBLE_COLLECTIONS_PATH: '{{ aap_dir }}/collections'
   args:
-    chdir: "{{ aap_dir }}"
+    chdir: '{{ aap_dir }}'
   async: 1400
   poll: 15
 
 # - name: run the Automation Controller installer
 #   ansible.builtin.import_playbook: ansible.containerized_installer.install
+  ansible.builtin.shell: "{{ controller_install_command }}"
 
 - name: wait for Automation Controller to be up
-  uri:
+  register: check2
+  until: check2.json is defined and check2.json.instances[0].capacity > 0 and check2.json.instance_groups[0].capacity > 0
+  retries: 60
+  delay: 10
+  ansible.builtin.uri:
     url: https://localhost/api/v2/ping/
     method: GET
     user: admin
     password: "{{ admin_password }}"
     validate_certs: false
-  register: check2
-  until: check2.json is defined and check2.json.instances[0].capacity > 0 and check2.json.instance_groups[0].capacity > 0
-  retries: 60
-  delay: 10
 
 - name: Display /api/v2/ping results
-  debug:
+  ansible.builtin.debug:
     msg: '{{ check2.json }}'
 
 # - name: load license block
@@ -98,6 +98,7 @@
 #   retries: 5
 
 ## Execution environments
+
 - name: create container registry credential
   awx.awx.credential:
     name: '{{ ee_registry_name }} credential'
@@ -108,9 +109,9 @@
     controller_password: "{{ admin_password }}"
     validate_certs: false
     inputs:
-      username: "{{ redhat_username }}"
-      password: "{{ redhat_password }}"
-      host: "{{ ee_registry_name }}"
+      username: '{{ redhat_username }}'
+      password: '{{ redhat_password }}'
+      host: '{{ ee_registry_name }}'
 
 - name: update default EE to use credential
   awx.awx.execution_environment:

@@ -7,13 +7,13 @@
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
     mode: 'u=rwX,g=rX,o='
-  with_items:
-    - "/etc/gitea"
-    - "{{ gitea_home }}"
-    - "{{ gitea_home }}/data"
-    - "{{ gitea_custom }}"
-    - "{{ gitea_custom }}/https"
-    - "{{ gitea_custom }}/mailer"
-    - "{{ gitea_home }}/indexers"
-    - "{{ gitea_home }}/log"
-    - "{{ gitea_repository_root }}"
+  loop:
+  - /etc/gitea
+  - '{{ gitea_home }}'
+  - '{{ gitea_home }}/data'
+  - '{{ gitea_custom }}'
+  - '{{ gitea_custom }}/https'
+  - '{{ gitea_custom }}/mailer'
+  - '{{ gitea_home }}/indexers'
+  - '{{ gitea_home }}/log'
+  - '{{ gitea_repository_root }}'

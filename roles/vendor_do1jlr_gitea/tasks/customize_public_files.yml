@@ -7,8 +7,8 @@
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
     mode: 'u=rwX,g=rX,o='
-  with_items:
-    - "{{ gitea_custom }}/public"
+  loop:
+  - '{{ gitea_custom }}/public'
 
 - name: transfer custom public web data
   become: true

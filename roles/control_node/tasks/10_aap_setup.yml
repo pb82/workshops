@@ -20,7 +20,9 @@
     src: "{{ tempdir.path }}/aap.tar.gz"
     dest: "{{ aap_dir }}"
     remote_src: true
-    extra_opts: ['--strip-components=1', '--show-stored-names']
+    extra_opts:
+    - --strip-components=1
+    - --show-stored-names
 
 # - name: Set AAP local repository on controller node
 #   ansible.builtin.yum_repository:
@@ -38,11 +40,11 @@
     group: "{{ username }}"
 
 - name: Install ansible-core
-  dnf:
-    name:
-      - ansible-core
-    state: present
   register: dnf_check
   until: dnf_check is not failed
   retries: 4
   delay: 5
+  ansible.builtin.package:
+    name:
+    - ansible-core
+    state: present

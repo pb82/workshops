@@ -18,8 +18,8 @@
         owner: "{{ gitea_user }}"
         group: "{{ gitea_group }}"
         mode: 'u=rwx,g=rx,o='
-      with_items:
-        - "{{ gitea_backup_location }}"
+      loop:
+      - '{{ gitea_backup_location }}'
 
     - name: Backing up gitea before upgrade
       ansible.builtin.command:
