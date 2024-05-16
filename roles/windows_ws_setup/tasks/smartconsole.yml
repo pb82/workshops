@@ -11,9 +11,9 @@
     - name: Download Microsoft Visual C++ Redistributable Packages needed for SmartConsole
       chocolatey.chocolatey.win_chocolatey:
         name:
-          - vcredist2010
-          - vcredist2012
-        state: present
+        - vcredist2010
+        - vcredist2012
+        state: "present"
         ignore_checksums: true
 
 - name: Set strong cryptography on 64 bit .Net Framework (version 4 and above)
@@ -29,19 +29,19 @@
 
 - name: Install Pscx needed for unzip step later
   community.windows.win_psmodule:
-    name: pscx
+    name: "pscx"
     allow_clobber: true
 
 - name: Check if SmartConsole is downloaded
   ansible.windows.win_stat:
-    path: C:\Temp\SmartConsole.exe
+    path: "C:\\Temp\\SmartConsole.exe"
   register: smartconsole
 
 - name: Download SmartConsole to specified path only if modified
   ansible.windows.win_get_url:
     url: "{{ windows_ws_setup_cp_console_pkg }}"
-    dest: C:\Temp\SmartConsole.exe
-    checksum: c8bed1481f168e2af6997dc7d5b43ce4046e01d8
+    dest: "C:\\Temp\\SmartConsole.exe"
+    checksum: "c8bed1481f168e2af6997dc7d5b43ce4046e01d8"
     force: true
   when: not smartconsole.stat.exists
   register: win_get_smartconsole
@@ -50,14 +50,14 @@
 
 - name: Unpack SmartConsole archive
   community.windows.win_unzip:
-    src: C:\Temp\SmartConsole.exe
-    dest: C:\Temp\SmartConsole
-    creates: C:\Temp\SmartConsole\SmartConsole.exe
+    src: "C:\\Temp\\SmartConsole.exe"
+    dest: "C:\\Temp\\SmartConsole"
+    creates: "C:\\Temp\\SmartConsole\\SmartConsole.exe"
 
 - name: Copy installer answer file to appropriate place
   ansible.windows.win_copy:
-    src: setup.iss
-    dest: C:\Temp\SmartConsole\setup.iss
+    src: "setup.iss"
+    dest: "C:\\Temp\\SmartConsole\\setup.iss"
 
 - name: Execute SmartConsole installer
   ansible.windows.win_command: C:\Temp\SmartConsole\SmartConsole.exe -s setup.iss

@@ -10,8 +10,9 @@
       retries: 5
   rescue:
     - name: debug in rescue
-      debug:
-        var: install_as3
-    - assert:
+      ansible.builtin.debug:
+        var: "install_as3"
+
+    - ansible.builtin.assert:
         that:
-          - "'already installed' in install_as3.msg"
+        - "'already installed' in install_as3.msg"

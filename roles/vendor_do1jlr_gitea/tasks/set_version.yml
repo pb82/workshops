@@ -11,7 +11,7 @@
   block:
     - name: "Get latest gitea release metadata"
       ansible.builtin.uri:
-        url: https://api.github.com/repos/go-gitea/gitea/releases/latest
+        url: "https://api.github.com/repos/go-gitea/gitea/releases/latest"
         return_content: true
       register: gitea_remote_metadata
 

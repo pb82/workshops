@@ -1,20 +1,20 @@
 ---
 - name: Create User Group
   ansible.builtin.group:
-    name: "{{ username }}"
-    state: present
+    name: "{{ _name_ }}"
+    state: "present"
   tags:
-    - user_accounts
-    - users
+  - user_accounts
+  - users
 
 - name: Create User Account
   ansible.builtin.user:
     createhome: true
-    group: "{{ username }}"
-    name: "{{ username }}"
-    shell: /bin/bash
-    state: present
+    group: "{{ _group_ }}"
+    name: "{{ _name_ }}"
+    shell: "/bin/bash"
+    state: "present"
     password: "{{ admin_password_hash }}"
   tags:
-    - user_accounts
-    - users
+  - user_accounts
+  - users

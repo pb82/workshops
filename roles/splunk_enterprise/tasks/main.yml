@@ -2,18 +2,18 @@
 - name: REMOVE SPLUNK DNS
   block:
     - name: GRAB ZONE ID
-      community.aws.route53_zone:
-        zone: "{{workshop_dns_zone}}"
       register: AWSINFO
+      amazon.aws.route53_zone:
+        zone: "{{ _zone_ }}"
 
     - name: GRAB ROUTE53 INFORMATION
-      community.aws.route53_info:
-        type: A
-        query: record_sets
-        hosted_zone_id: "{{AWSINFO.zone_id}}"
-        start_record_name: "student1.{{ec2_name_prefix|lower}}.{{workshop_dns_zone}}"
-        max_items: "{{ student_total|int }}"
       register: record_sets
+      amazon.aws.route53_info:
+        type: "A"
+        query: "record_sets"
+        hosted_zone_id: "{{AWSINFO.zone_id}}"
+        start_record_name: "{{ _start_record_name_ }}"
+        max_items: "{{ _max_items_ }}"
 
     - name: DELETE DNS ENTRIES FOR EACH STUDENT
       become: false
@@ -32,15 +32,15 @@
 - name: ADD SPLUNK DNS
   block:
     - name: CHECK TO SEE IF SPLUNK SSL CERT ALREADY APPLIED
-      uri:
-        url: https://localhost/api/v2/ping/
-        method: GET
-        user: admin
-        password: ansible
+      register: check_cert
+      ansible.builtin.uri:
+        url: "https://localhost/api/v2/ping/"
+        method: "GET"
+        user: "admin"
+        password: "{{ _password_ }}"
         validate_certs: true
         force_basic_auth: true
-      register: check_cert
-      ignore_errors: true
+
     - name: DNS FOR SPLUNK
       become: false
       community.aws.route53:
@@ -59,114 +59,118 @@
 
 # tasks file for splunk_enterprise
 - name: "install epel"
-  yum:
-    name: 'https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm'
-    state: present
+  ansible.builtin.package:
+    name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+    state: "present"
 
 - name: "install pre-reqs"
-  package:
+  ansible.builtin.package:
     name:
-      - rsync
-      - tar
-      - procps-ng
-      - wget
-      - net-tools
-      - curl
-      - sudo
-      - iputils
-      - bind-utils
-      - ansible
-      - python-requests
-      - git
-    state: present
+    - rsync
+    - tar
+    - procps-ng
+    - wget
+    - net-tools
+    - curl
+    - sudo
+    - iputils
+    - bind-utils
+    - ansible
+    - python-requests
+    - git
+    state: "present"
 
 - name: ensure groups exist
-  group:
+  loop:
+  - ansible
+  - splunk
+  awx.awx.group:
     name: "{{ item }}"
-    state: present
-  loop:
-    - 'ansible'
-    - 'splunk'
+    state: "present"
+    inventory: "{{ _inventory_ }}"
+
 - name: ensure users exist
-  user:
-    name: "{{ item['name'] }}"
-    state: present
-    group: "{{ item['group'] }}"
   loop:
-    - {name: 'ansible', group: 'ansible'}
-    - {name: 'splunk', group: 'splunk'}
+  - name: ansible
+    group: ansible
+  - name: splunk
+    group: splunk
+  awx.awx.user:
+    name: "{{ item['name'] }}"
+    state: "present"
+    group: "{{ item['group'] }}"
+    username: "{{ _username_ }}"
 
 - name: ensure hardcoded splunk-ansible container dir exists
-  file:
-    path: /opt/splunk/
-    state: directory
+  ansible.builtin.file:
+    path: "/opt/splunk/"
+    state: "directory"
 
 - name: INSTALL CERTBOT
-  yum:
-    name: certbot
+  ansible.builtin.yum:
+    name: "certbot"
 
 # If this fails check out status of certbot: https://letsencrypt.status.io/
+
 - name: ISSUE CERT
-  shell: "certbot certonly --standalone -d {{username}}-siem.{{ec2_name_prefix|lower}}.{{workshop_dns_zone}} --email ansible-security-automation@redhat.com --noninteractive --agree-tos"
   register: issue_cert
   until: issue_cert is not failed
   retries: 5
-  ignore_errors: true
+  ansible.builtin.shell: "certbot certonly --standalone -d {{username}}-siem.{{ec2_name_prefix|lower}}.{{workshop_dns_zone}} --email ansible-security-automation@redhat.com --noninteractive --agree-tos"
 
 - name: APPEND LETS ENCRYPT FAILED
-  set_fact:
-    dns_information: |
-      - The Lets Encrypt certbot failed, please check https://letsencrypt.status.io/ to make sure the service is running
   run_once: true
   delegate_to: localhost
   delegate_facts: true
   when: issue_cert is failed
+  ansible.builtin.set_fact:
+    dns_information: "- The Lets Encrypt certbot failed, please check https://letsencrypt.status.io/ to make sure the service is running\n"
 
 - name: MAKE SPLUNK PKI DIR
-  file:
-    path: /etc/pki/splunk
-    state: directory
-    mode: 0755
+  ansible.builtin.file:
+    path: "/etc/pki/splunk"
+    state: "directory"
+    mode: 493
 
 - name: MOVE SSL KEY
-  copy:
-    remote_src: true
-    src: "/etc/letsencrypt/live/{{username}}-siem.{{ec2_name_prefix|lower}}.{{workshop_dns_zone}}/privkey.pem"
-    dest: /etc/pki/splunk/splunk.key
   when: issue_cert is not failed
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ _src_ }}"
+    dest: "/etc/pki/splunk/splunk.key"
 
 - name: GRAB SPECIFIC SSL CERT
-  slurp:
-    src: "/etc/letsencrypt/live/{{username}}-siem.{{ec2_name_prefix|lower}}.{{workshop_dns_zone}}/cert.pem"
   register: intermediate_cert
+  ansible.builtin.slurp:
+    src: "{{ _src_ }}"
 
 - name: COMBINE SPECIFIC AND INTERMEDIATE CERT
-  template:
-    src: combined_cert.j2
-    dest: /etc/pki/splunk/splunk.cert
+  ansible.builtin.template:
+    src: "combined_cert.j2"
+    dest: "/etc/pki/splunk/splunk.cert"
 
 - name: Download Splunk from S3
-  get_url:
+  ansible.builtin.get_url:
     url: "{{ splunk_enterprise_install_pkg }}"
-    dest: /tmp/splunk.tgz
+    dest: "/tmp/splunk.tgz"
 
 - name: Git clone splunk-ansible
-  git:
-    repo: 'https://github.com/splunk/splunk-ansible'
-    version: '7.2.6'
-    dest: '/tmp/splunk-ansible'
+  ansible.builtin.git:
+    repo: "https://github.com/splunk/splunk-ansible"
+    version: "7.2.6"
+    dest: "/tmp/splunk-ansible"
 
 - name: Copy splunk-ansible Extra Vars
-  copy:
-    src: splunk_ansible_vars.yml
-    dest: '/tmp/splunk-ansible/vars.yml'
+  ansible.builtin.copy:
+    src: "splunk_ansible_vars.yml"
+    dest: "/tmp/splunk-ansible/vars.yml"
 
 - name: Copy splunk-ansible Inventory
-  copy:
-    src: splunk_ansible_inventory.ini
-    dest: '/tmp/splunk-ansible/inventory.ini'
+  ansible.builtin.copy:
+    src: "splunk_ansible_inventory.ini"
+    dest: "/tmp/splunk-ansible/inventory.ini"
 
 - name: Run splunk-ansible
-  shell: 'ansible-playbook site.yml -e "@vars.yml" -i inventory.ini'
   args:
-    chdir: '/tmp/splunk-ansible'
+    chdir: /tmp/splunk-ansible
+  ansible.builtin.shell: 'ansible-playbook site.yml -e "@vars.yml" -i inventory.ini'

@@ -8,13 +8,13 @@
       register: _pre_update_apt_cache
       until: _pre_update_apt_cache is succeeded
       when:
-        - ansible_pkg_mgr == "apt"
+      - ansible_pkg_mgr == "apt"
 
     - name: Install dependencies
       become: true
       ansible.builtin.package:
         name: "{{ gitea_dependencies }}"
-        state: present
+        state: "present"
       register: _install_dep_packages
       until: _install_dep_packages is succeeded
       retries: 5

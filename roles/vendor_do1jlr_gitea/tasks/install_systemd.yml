@@ -2,14 +2,14 @@
 - name: "Setup systemd service"
   become: true
   ansible.builtin.template:
-    src: gitea.service.j2
-    dest: /lib/systemd/system/gitea.service
-    owner: root
-    group: root
-    mode: 0644
+    src: "gitea.service.j2"
+    dest: "/lib/systemd/system/gitea.service"
+    owner: "root"
+    group: "root"
+    mode: 420
   notify:
-    - "Reload systemd"
-    - "Restart gitea"
+  - Reload systemd
+  - Restart gitea
 
 - name: "Reload systemd"
   become: true
