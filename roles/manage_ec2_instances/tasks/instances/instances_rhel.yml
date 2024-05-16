@@ -5,8 +5,7 @@
 
 - name: Initialize/reset list count
   ansible.builtin.set_fact:
-    list_count: "reset"
+    list_count: reset
 
 - name: Call RHEL retry tasks include
   ansible.builtin.include_tasks: rhel/rhel_loop.yml
-...

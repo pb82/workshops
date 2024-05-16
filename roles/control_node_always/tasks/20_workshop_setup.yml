@@ -1,82 +1,82 @@
 ---
 - name: template out motd
-  template:
+  ansible.builtin.template:
     src: motd.j2
     dest: /etc/motd
 
 - name: template ansible-navigator.yml into home directory
-  template:
+  ansible.builtin.template:
     src: ansible-navigator.yml.j2
-    dest: "/home/{{ username }}/.ansible-navigator.yml"
-    owner: "{{ username }}"
-    group: "{{ username }}"
+    dest: "{{ _dest_ }}"
+    owner: "{{ _owner_ }}"
+    group: "{{ _group_ }}"
 
 - name: Create .ssh directory if it does not exist
-  file:
-    path: "/home/{{ username }}/.ssh"
+  ansible.builtin.file:
+    path: "{{ _path_ }}"
     state: directory
-    mode: '700'
+    mode: "700"
 
 - name: Put ssh-key in proper spot for student
-  copy:
-    src: "{{ output_dir }}/{{ ec2_name_prefix }}-private.pem"
-    dest: "/home/{{ username }}/.ssh/id_rsa"
-    owner: "{{ username }}"
-    group: "{{ username }}"
-    mode: 0400
+  ansible.builtin.copy:
+    src: "{{ _src_ }}"
+    dest: "{{ _dest_ }}"
+    owner: "{{ _owner_ }}"
+    group: "{{ _group_ }}"
+    mode: 256
 
 - name: clean out /tmp/workshops
-  file:
+  ansible.builtin.file:
     path: /tmp/workshops
     state: absent
 
 - name: Clone workshops repo
-  git:
+  ansible.builtin.git:
     accept_hostkey: true
     clone: true
     dest: /tmp/workshops
-    repo: '{{ ansible_workshops_url | default("https://github.com/ansible/workshops.git") }}'
-    version: '{{ ansible_workshops_version | default("main") }}'
-    refspec: '{{ ansible_workshops_refspec | default("") }}'
+    repo: "{{ _repo_ }}"
+    version: "{{ _version_ }}"
+    refspec: "{{ _refspec_ }}"
     force: true
 
 - name: Move relevant exercises to correct location
-  copy:
+  ansible.builtin.copy:
     src: '{{ "/tmp/workshops/" + exercise_src_location | default("exercises/ansible_" + workshop_type) + "/" }}'
-    dest: '{{ "/home/" + username + "/" + exercise_dest_location | default(workshop_type + "-workshop") }}'
+    dest: "{{ _dest_ }}"
     remote_src: true
-    owner: "{{ username }}"
-    group: "{{ username }}"
+    owner: "{{ _owner_ }}"
+    group: "{{ _group_ }}"
     local_follow: true
-  ignore_errors: true  # Required for testing local development
 
 - name: Create lab inventory directory
-  file:
+  ansible.builtin.file:
     state: directory
-    path: /home/{{ username }}/lab_inventory
+    path: "{{ _path_ }}"
 
 - name: Put student inventory in proper spot
-  copy:
-    src: "{{ output_dir }}/{{ student }}-instances.txt"
-    dest: /home/{{ username }}/lab_inventory/hosts
-    owner: "{{ username }}"
-    group: "{{ username }}"
   when: username in inventory_hostname
+  ansible.builtin.copy:
+    src: "{{ _src_ }}"
+    dest: "{{ _dest_ }}"
+    owner: "{{ _owner_ }}"
+    group: "{{ _group_ }}"
 
 - name: Copy instructor inventory to student1
-  copy:
+  when: '"student1-ansible-1" in inventory_hostname'
+  ansible.builtin.copy:
     src: "{{ output_dir }}/instructor_inventory.txt"
     dest: /tmp/instructor-inventory
-    owner: "{{ username }}"
-    group: "{{ username }}"
-  when: '"student1-ansible-1" in inventory_hostname'
+    owner: "{{ _owner_ }}"
+    group: "{{ _group_ }}"
 
 - name: Install ansible.cfg in home directory
-  template:
+  ansible.builtin.template:
     src: ansible.cfg.j2
-    dest: "/etc/ansible/ansible.cfg"
+    dest: /etc/ansible/ansible.cfg
 
 # Pull specific EE for each workshop based on workshop name
+
 - name: Pull execution environment for {{ workshop_type }} workshop
   become_user: "{{ username }}"
   containers.podman.podman_image:

@@ -5,20 +5,19 @@
   gather_facts: false
 
   vars:
-    response_url: ''
-    protocol: ''
-    action: ''
-    src_network: ''
-    src_mask: ''
-    dst_network: ''
-    dst_mask: ''
-    dst_port: ''
-    slack_user: ''
+    response_url: ""
+    protocol: ""
+    action: ""
+    src_network: ""
+    src_mask: ""
+    dst_network: ""
+    dst_mask: ""
+    dst_port: ""
+    slack_user: ""
 
   tasks:
     - include_role:
         name: termlen0.ios_check_acls
-
 
     - name: LINEINFILE INSERT BEFORE
       lineinfile:

@@ -2,7 +2,7 @@
 - name: make sure we have access to pre_build AMI
   block:
     - name: print AMI to terminal window
-      debug: 
+      ansible.builtin.debug:
         var: ansible_control_node_ami
 
     - name: check if we have access to AMI
@@ -13,5 +13,5 @@
 
   rescue:
     - name: AWS AMI Access is not available
-      fail:
-        msg: "You do not have access to the pre_build AMI for region {{ ec2_region }}.  Please re-run with pre_build set to false"
+      ansible.builtin.fail:
+        msg: You do not have access to the pre_build AMI for region {{ ec2_region }}.  Please re-run with pre_build set to false

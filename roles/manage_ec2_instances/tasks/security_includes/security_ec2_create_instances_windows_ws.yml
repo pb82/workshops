@@ -10,7 +10,7 @@
     state: running
     user_data: "{{ lookup('template', 'windows_userdata.txt.j2') }}"
     filters:
-      "tag:Workshop_windows": "{{ ec2_name_prefix }}-windows"
+      tag:Workshop_windows: "{{ ec2_name_prefix }}-windows"
       instance-state-name: running
     tags:
       Workshop_windows: "{{ ec2_name_prefix }}-windows"
@@ -18,11 +18,11 @@
       Workshop_type: "{{ workshop_type }}"
       AWS_USERNAME: "{{ aws_user }}"
       owner: "{{ aws_user }}"
-      Info: "AWS_USERNAME that provisioned this-> {{ aws_user }}"
-      Ansible_Workshops: "This was provisioned through the ansible workshops provisioner"
+      Info: AWS_USERNAME that provisioned this-> {{ aws_user }}
+      Ansible_Workshops: This was provisioned through the ansible workshops provisioner
       Students: "{{ student_total|int }}"
       username: "{{ ec2_info['windows_ws']['username'] }}"
-      short_name: "windows_ws"
+      short_name: windows_ws
       ansible-workshops: "true"
     wait: "{{ ec2_wait }}"
     network:
@@ -39,4 +39,3 @@
   async: "{{ async_timeout_seconds }}"
   poll: 0
   register: windows_ws_async
-...

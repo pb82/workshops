@@ -31,7 +31,7 @@
 - name: Gather distribution and distribution_major_version facts
   ansible.builtin.setup:
     gather_subset:
-      - '!all'
+      - "!all"
       - distribution
       - distribution_major_version
 
@@ -40,8 +40,8 @@
     - name: Set PasswordAuthentication no in sshd_config
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
-        regexp: '^PasswordAuthentication'
-        line: "PasswordAuthentication no"
+        regexp: ^PasswordAuthentication
+        line: PasswordAuthentication no
 
     - name: restart ssh
       service:

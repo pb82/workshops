@@ -7,7 +7,7 @@
 
 - name: MATCH PATTERN
   pattern_match:
-    regex: "^(\\S+)\\s+(\\d+\\.\\d+\\.\\d+\\.\\d+).*(up|administratively down).*(up|down)"
+    regex: ^(\S+)\s+(\d+\.\d+\.\d+\.\d+).*(up|administratively down).*(up|down)
     match_all: true
   register: section
 

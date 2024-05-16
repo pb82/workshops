@@ -1,6 +1,6 @@
 ---
 - name: Wait for BIG-IP to boot up completely
-  wait_for:
+  ansible.builtin.wait_for:
     host: "{{ ansible_host }}"
     port: 8443
     state: present
@@ -13,7 +13,7 @@
       password: "{{ admin_password }}"
       server_port: 8443
       timeout: 300
-      validate_certs: "no"
+      validate_certs: false
 
 - name: Change BIG-IP F5 mgmt password
   f5networks.f5_modules.bigip_command:
@@ -22,7 +22,7 @@
       transport: cli
       user: admin
       server: "{{ ansible_host }}"
-    commands: "modify auth user admin password {{ admin_password }}"
+    commands: "{{ _commands_ }}"
   register: change_password
   until: change_password is not failed
   retries: 5
@@ -35,10 +35,10 @@
   delegate_to: localhost
 
 - name: retrieve AS3 RPM
-  include_tasks: retrieve_as3.yml
+  ansible.builtin.include_tasks: retrieve_as3.yml
 
 - name: install AS3 RPM
-  include_tasks: install_as3.yml
+  ansible.builtin.include_tasks: install_as3.yml
 
 - name: Set db provision.extramb
   f5networks.f5_modules.bigip_sys_db:
@@ -74,4 +74,3 @@
     commands:
       - restart sys service restjavad
       - restart sys service restnoded
-  ignore_errors: true

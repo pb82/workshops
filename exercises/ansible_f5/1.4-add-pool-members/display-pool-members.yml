@@ -1,5 +1,5 @@
 ---
-- name: "List pool members"
+- name: List pool members
   hosts: lb
   gather_facts: false
   connection: local
@@ -17,11 +17,11 @@
           - ltm-pools
       register: bigip_device_facts
 
-    - name: "View complete output"
-      debug: "msg={{bigip_device_facts}}"
+    - name: View complete output
+      debug: msg={{bigip_device_facts}}
 
-    - name: "Show members belonging to pool"
-      debug: "msg={{item}}"
+    - name: Show members belonging to pool
+      debug: msg={{item}}
       loop: "{{bigip_device_facts.ltm_pools | json_query(query_string)}}"
       vars:
         query_string: "[?name=='http_pool'].members[*].name[]"

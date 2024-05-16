@@ -48,7 +48,7 @@
     name: "{{ item }}"
     data: 0
     type: dword
-  with_items:
+  loop:
     - SecurityLayer
     - UserAuthentication
 

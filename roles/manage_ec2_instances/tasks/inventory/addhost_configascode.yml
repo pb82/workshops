@@ -6,14 +6,14 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Workshop_gitlab": "{{ec2_name_prefix}}-gitlab"
+      tag:Workshop_gitlab: "{{ec2_name_prefix}}-gitlab"
   register: gitlab_node_facts
 
 ################### Create inventories ###################
 
 - name: GitLab | Add new instance to host group
   add_host:
-    hostname: 'gitlab'
+    hostname: gitlab
     short_name: "{{ item.tags.short_name }}"
     username: "{{ item.tags.username }}"
     ansible_user: "{{ item.tags.username }}"
@@ -35,7 +35,7 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Workshop_automation-hub": "{{ec2_name_prefix}}-automation-hub"
+      tag:Workshop_automation-hub: "{{ec2_name_prefix}}-automation-hub"
   register: generic_hub_host_facts
 
 - name: grab facts for hub host
@@ -43,7 +43,7 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Workshop_automation-hub": "{{ec2_name_prefix}}-automationhub"
+      tag:Workshop_automation-hub: "{{ec2_name_prefix}}-automationhub"
   register: automation_hub_host_facts
 
 - name: destroy EC2 instances for generic hub node

@@ -2,7 +2,7 @@
 - name: Pull code-server image
   become_user: "{{ username }}"
   containers.podman.podman_image:
-    name: "docker.io/codercom/code-server:latest"
+    name: docker.io/codercom/code-server:latest
   register: podman_pull
   until: podman_pull is not failed
   retries: 5
@@ -13,10 +13,10 @@
   file:
     path: "{{ item }}"
     state: directory
-    mode: '0777'
+    mode: "0777"
   loop:
-    - "/home/{{ username }}/code-server-config"
-    - "/home/{{ username }}/code-server-project"
+    - /home/{{ username }}/code-server-config
+    - /home/{{ username }}/code-server-project
 
 - name: Ensure code-server container is running
   become_user: "{{ username }}"
@@ -25,13 +25,13 @@
     image: codercom/code-server:latest
     state: started
     ports:
-      - "8080:8080"
+      - 8080:8080
     env:
       DOCKER_USER: "{{ username }}"
       PASSWORD: "{{ admin_password }}"
     volumes:
-      - "/home/{{ username }}/code-server-config:/home/coder/.config:Z"
-      - "/home/{{ username }}/code-server-project:/home/coder/project:Z"
+      - /home/{{ username }}/code-server-config:/home/coder/.config:Z
+      - /home/{{ username }}/code-server-project:/home/coder/project:Z
   when:
     - dns_type is defined
     - dns_type == "none"
@@ -43,19 +43,19 @@
     image: codercom/code-server:latest
     state: started
     ports:
-      - "8080:8080"
+      - 8080:8080
     volumes:
-      - "/home/{{ username }}/code-server-config:/home/coder/.config:Z"
-      - "/home/{{ username }}/code-server-project:/home/coder/project:Z"
-      - "/home/{{ username }}/{{ student }}.{{ ec2_name_prefix|lower }}.{{ workshop_dns_zone }}:/home/coder/certs:Z"
+      - /home/{{ username }}/code-server-config:/home/coder/.config:Z
+      - /home/{{ username }}/code-server-project:/home/coder/project:Z
+      - /home/{{ username }}/{{ student }}.{{ ec2_name_prefix|lower }}.{{ workshop_dns_zone }}:/home/coder/certs:Z
     env:
       DOCKER_USER: "{{ username }}"
       PASSWORD: "{{ admin_password }}"
     command:
-      - "--cert"
-      - "/home/coder/certs/cert.pem"
-      - "--cert-key"
-      - "/home/coder/certs/privkey.pem"
+      - --cert
+      - /home/coder/certs/cert.pem
+      - --cert-key
+      - /home/coder/certs/privkey.pem
   when:
     - dns_type is defined
     - dns_type != "none"
@@ -106,4 +106,3 @@
 #   register: install_extension
 #   until: install_extension is not failed
 #   retries: 5
-

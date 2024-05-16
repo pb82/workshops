@@ -6,47 +6,43 @@
     state: directory
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
-    mode: 'u=rwX,g=rX,o='
-  with_items:
+    mode: u=rwX,g=rX,o=
+  loop:
     - "{{ gitea_custom }}/public"
     - "{{ gitea_custom }}/public/img"
 
 - name: transfer custom logo.svg
   become: true
   ansible.builtin.copy:
-    src: "{{ lookup('first_found', transfer_custom_logo_logosvg) }}"
+    src: "{{ _src_ }}"
     dest: "{{ gitea_custom }}/public/img/logo.svg"
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
-    mode: '0644'
-  ignore_errors: true
+    mode: "0644"
 
 - name: transfer custom logo.png
   become: true
   ansible.builtin.copy:
-    src: "{{ lookup('first_found', transfer_custom_logo_logopng) }}"
+    src: "{{ _src_ }}"
     dest: "{{ gitea_custom }}/public/img/logo.png"
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
-    mode: '0644'
-  ignore_errors: true
+    mode: "0644"
 
 - name: transfer custom favicon.png
   become: true
   ansible.builtin.copy:
-    src: "{{ lookup('first_found', transfer_custom_logo_faviconpng) }}"
+    src: "{{ _src_ }}"
     dest: "{{ gitea_custom }}/public/img/favicon.png"
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
-    mode: '0644'
-  ignore_errors: true
+    mode: "0644"
 
 - name: transfer custom apple-touch-icon.png
   become: true
   ansible.builtin.copy:
-    src: "{{ lookup('first_found', transfer_custom_logo_appletouchiconpng) }}"
+    src: "{{ _src_ }}"
     dest: "{{ gitea_custom }}/public/img/apple-touch-icon.png"
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
-    mode: '0644'
-  ignore_errors: true
+    mode: "0644"

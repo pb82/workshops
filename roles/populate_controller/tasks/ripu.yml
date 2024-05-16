@@ -2,21 +2,21 @@
 - name: use COP controller_configuration collection
   vars:
     controller_validate_certs: false
-    controller_hostname: "https://{{ ansible_host }}"
-    controller_username: "admin"
+    controller_hostname: https://{{ ansible_host }}
+    controller_username: admin
     controller_password: "{{ admin_password }}"
   include_role:
-    name: '{{ setup_controller }}'
+    name: "{{ setup_controller }}"
   loop:
-    - 'redhat_cop.controller_configuration.groups'
+    - redhat_cop.controller_configuration.groups
   loop_control:
     loop_var: setup_controller
 
 - name: Debug the student number via the username var
   ansible.builtin.debug:
     msg:
-     - "student: {{ student_number }}"
-     - "{{ groups['lab_hosts'] }}"
+      - "student: {{ student_number }}"
+      - "{{ groups['lab_hosts'] }}"
 
 - name: Filter hosts containing student number
   ansible.builtin.set_fact:
@@ -33,10 +33,10 @@
   awx.awx.host:
     name: "{{ hostvars[item].short_name }}"
     enabled: true
-    inventory: "Workshop Inventory"
+    inventory: Workshop Inventory
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
     variables:
       ansible_host: "{{ hostvars[item].private_ip }}"
@@ -46,10 +46,10 @@
   awx.awx.host:
     name: "{{ hostvars[item].short_name }}"
     enabled: true
-    inventory: "Workshop Inventory"
+    inventory: Workshop Inventory
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
     variables:
       ansible_host: "{{ hostvars[item].private_ip }}"
@@ -67,25 +67,25 @@
 - name: Add web hosts to the web group
   awx.awx.group:
     name: web
-    inventory: "Workshop Inventory"
+    inventory: Workshop Inventory
     hosts: "{{ web_short_names }}"
-    preserve_existing_hosts: True
-    preserve_existing_children: True
+    preserve_existing_hosts: true
+    preserve_existing_children: true
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 - name: Add web hosts to the web group
   awx.awx.group:
     name: control
-    inventory: "Workshop Inventory"
+    inventory: Workshop Inventory
     hosts: "{{ control_short_names }}"
-    preserve_existing_hosts: True
-    preserve_existing_children: True
+    preserve_existing_hosts: true
+    preserve_existing_children: true
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 - name: Splunk credential type
@@ -114,17 +114,17 @@
         - splunk_hectoken
     injectors:
       extra_vars:
-        splunk_url: !unsafe '{{ splunk_url }}'
-        splunk_index: !unsafe '{{ splunk_index }}'
-        splunk_hectoken: !unsafe '{{ splunk_hectoken }}'
+        splunk_url: !unsafe "{{ splunk_url }}"
+        splunk_index: !unsafe "{{ splunk_index }}"
+        splunk_hectoken: !unsafe "{{ splunk_hectoken }}"
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 - name: Splunk credential
   awx.awx.credential:
-    name: "Splunk Credential"
+    name: Splunk Credential
     credential_type: Splunk HEC Token
     organization: Default
     inputs:
@@ -133,7 +133,7 @@
       splunk_hectoken: "{{ ripu_splunk_hectoken }}"
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
   when:
     - ripu_splunk_url is defined

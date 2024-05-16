@@ -40,7 +40,7 @@
         name: ../roles/manage_ec2_instances
 
 - name: Wait for all nodes to have SSH reachability
-  hosts: "managed_nodes:control_nodes:attendance"
+  hosts: managed_nodes:control_nodes:attendance
   become: true
   gather_facts: false
 
@@ -49,7 +49,7 @@
         name: ../roles/connectivity_test
 
 - name: Configure host names on managed nodes
-  hosts: "managed_nodes"
+  hosts: managed_nodes
   become: true
   gather_facts: false
   tasks:
@@ -60,7 +60,7 @@
     - name: Setup /etc/hosts file per student
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/{{ ec2_name_prefix }}/{{ student }}-etchosts.txt"
-        dest: "/etc/hosts"
+        dest: /etc/hosts
 
 - name: Configure nginx on attendance host
   hosts: attendance
@@ -73,7 +73,7 @@
       when: attendance|bool
 
 - name: Wait for all security nodes to have SSH reachability
-  hosts: "security_connection_check"
+  hosts: security_connection_check
   become: true
   gather_facts: false
   tasks:
@@ -82,7 +82,7 @@
         name: ../roles/connectivity_test
 
 - name: Configure common options and control nodes
-  hosts: "control_nodes"
+  hosts: control_nodes
   gather_facts: true
   become: true
   tasks:
@@ -97,7 +97,7 @@
     - name: Setup /etc/hosts file per student
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/{{ ec2_name_prefix }}/{{ student }}-etchosts.txt"
-        dest: "/etc/hosts"
+        dest: /etc/hosts
 
     - name: Include control_node role
       ansible.builtin.include_role:
@@ -135,19 +135,19 @@
         - populatecontroller
 
 - name: Configure private automation hub
-  hosts: 'automation_hub'
+  hosts: automation_hub
   gather_facts: true
   become: true
   tasks:
     - name: Include private_automation_hub role
       include_role:
-          name: ../roles/private_automation_hub
+        name: ../roles/private_automation_hub
       when:
         - automation_hub is defined
         - automation_hub|bool
 
     - name: Change hub password
-      ansible.builtin.shell: 'PULP_SETTINGS=/etc/pulp/settings.py pulpcore-manager reset-admin-password --password """{{ admin_password }}"""'
+      ansible.builtin.shell: PULP_SETTINGS=/etc/pulp/settings.py pulpcore-manager reset-admin-password --password """{{ admin_password }}"""
       when:
         - pre_build is defined
         - pre_build|bool
@@ -197,8 +197,8 @@
 
     - name: Attempt RHPDS completion callback
       when:
-      - agnosticd_callback_url != ''
-      - agnosticd_callback_token != ''
+        - agnosticd_callback_url != ''
+        - agnosticd_callback_token != ''
       vars:
         user_body_yaml: "{{ output_dir ~ '/user-body.yaml' }}"
         user_data_yaml: "{{ output_dir ~ '/user-data.yaml' }}"

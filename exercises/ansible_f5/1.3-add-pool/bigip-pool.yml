@@ -13,7 +13,7 @@
           password: "{{ansible_password}}"
           server_port: 8443
           validate_certs: false
-        name: "http_pool"
-        lb_method: "round-robin"
-        monitors: "/Common/http"
-        monitor_type: "and_list"
+        name: http_pool
+        lb_method: round-robin
+        monitors: /Common/http
+        monitor_type: and_list

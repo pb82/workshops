@@ -1,14 +1,14 @@
 ---
 - name: Initialize/reset list count
   ansible.builtin.set_fact:
-    list_count: "reset"
+    list_count: reset
 
 - name: Call qradar retry tasks include
   ansible.builtin.include_tasks: security_ec2_create_loop_qradar.yml
 
 - name: Initialize/reset list count
   ansible.builtin.set_fact:
-    list_count: "reset"
+    list_count: reset
 
 - name: Call splunk retry tasks include
   ansible.builtin.include_tasks: security_ec2_create_loop_splunk.yml
@@ -26,28 +26,28 @@
 
 - name: Initialize/reset list count
   ansible.builtin.set_fact:
-    list_count: "reset"
+    list_count: reset
 
 - name: Call snort retry tasks include
   ansible.builtin.include_tasks: security_ec2_create_loop_snort.yml
 
 - name: Initialize/reset list count
   ansible.builtin.set_fact:
-    list_count: "reset"
+    list_count: reset
 
 - name: Call attack sim retry tasks include
   ansible.builtin.include_tasks: security_ec2_create_loop_attacksim.yml
 
 - name: Initialize/reset list count
   ansible.builtin.set_fact:
-    list_count: "reset"
+    list_count: reset
 
 - name: Call Check Point CloudGuard Security Management retry tasks include
   ansible.builtin.include_tasks: security_ec2_create_loop_checkpoint_mgmt.yml
 
 - name: Initialize/reset list count
   ansible.builtin.set_fact:
-    list_count: "reset"
+    list_count: reset
 
 - name: Call Windows Workstation (SECURITY MODE) retry tasks include
   ansible.builtin.include_tasks: security_ec2_create_loop_windows_ws.yml
@@ -84,4 +84,3 @@
 
     ###
     ###########################################################################
-...

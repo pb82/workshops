@@ -24,7 +24,7 @@
         tasks_from: inventory/addhost_automation_hub.yml
 
 - name: configure private automation hub
-  hosts: 'automation_hub'
+  hosts: automation_hub
   gather_facts: false
   become: true
   vars:
@@ -66,14 +66,14 @@
     debug_teardown: false
 
   tasks:
-    - {include_role: {name: ../roles/manage_ec2_instances}}
-    - {include_role: {name: ../roles/aws_dns}, when: dns_type == "aws"}
-    - {include_role: {name: ../roles/gitlab_server}, when: workshop_type == "windows"}
-    - {include_role: {name: ../roles/workshop_attendance}, when: attendance}
+    - { include_role: { name: ../roles/manage_ec2_instances } }
+    - { include_role: { name: ../roles/aws_dns }, when: dns_type == "aws" }
+    - { include_role: { name: ../roles/gitlab_server }, when: workshop_type == "windows" }
+    - { include_role: { name: ../roles/workshop_attendance }, when: attendance }
     - name: Attempt RHPDS completion callback
       when:
-      - agnosticd_callback_url != ''
-      - agnosticd_callback_token != ''
+        - agnosticd_callback_url != ''
+        - agnosticd_callback_token != ''
       vars:
         user_body_yaml: "{{ output_dir ~ '/user-body.yaml' }}"
         user_data_yaml: "{{ output_dir ~ '/user-data.yaml' }}"

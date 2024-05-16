@@ -1,42 +1,44 @@
 ---
 - name: load automation controller vars for specific workshop type
-  include_vars: "{{ item }}"
   with_first_found:
     - "{{role_path}}/vars/{{ workshop_type }}.yml"
     - "{{role_path}}/vars/unsupported_workshop.yml"
+  ansible.builtin.include_vars: "{{ item }}"
 
 - name: ensure controller is online and working
-  uri:
-    url: https://localhost/api/v2/ping/
-    method: GET
-    user: admin
-    password: "{{ admin_password }}"
-    validate_certs: false
-    force_basic_auth: true
   register: controller_online
   until: controller_online is success
   delay: 3
   retries: 5
 
-# Disable collections requirements.yml and rely on only EEs
+  # Disable collections requirements.yml and rely on only EEs
+  ansible.builtin.uri:
+    url: https://localhost/api/v2/ping/
+    method: GET
+    user: admin
+    password: "{{ _password_ }}"
+    validate_certs: false
+    force_basic_auth: true
+
 - name: Turn off AWX_COLLECTIONS_ENABLED on controller
   awx.awx.settings:
     name: AWX_COLLECTIONS_ENABLED
-    value: false
+    value: "{{ _value_ }}"
     controller_username: admin
-    controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_password: "{{ controller_password }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
-    
+
 #### CREDENTIAL
+
 - name: add SSH credential into Automation controller
   awx.awx.credential:
-    name: "Workshop Credential"
+    name: Workshop Credential
     credential_type: Machine
-    organization: "Default"
+    organization: Default
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
     inputs:
       username: ec2-user
@@ -44,27 +46,25 @@
 
 - name: add controller credential into automation controller
   awx.awx.credential:
-    name: "Controller Credential"
+    name: Controller Credential
     credential_type: Red Hat Ansible Automation Platform
     organization: Default
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
     inputs:
       host: "{{ student }}.{{ ec2_name_prefix }}.{{ workshop_dns_zone }}"
       username: admin
       password: "{{ admin_password }}"
-#### END OF CREDENTIAL
 
-#### Inventory
 - name: create workshop inventory
   awx.awx.inventory:
-    name: "Workshop Inventory"
-    organization: "Default"
+    name: Workshop Inventory
+    organization: Default
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
   register: workshop_inventory
   until: workshop_inventory is success
@@ -88,31 +88,33 @@
 # #### end of inventory
 
 ### USER
+
 - name: add student user
   awx.awx.user:
-    username: "{{ student }}"
-    password: "{{ admin_password }}"
-    email: fake@fake.com
+    username: "{{ _username_ }}"
+    password: "{{ _password_ }}"
+    email: charlotte5@example.com
     state: present
     superuser: true
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 # Workshop specific execution environments
+
 - name: Add specific workshop execution environment
   awx.awx.execution_environment:
-    name: "{{ workshop_type }} workshop execution environment"
-    image: "{{ lookup('vars', workshop_type + '_ee') }}"
+    name: "{{ _name_ }}"
+    image: "{{ _image_ }}"
     pull: missing
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://{{ ansible_host }}"
+    controller_host: https://{{ ansible_host }}
     validate_certs: false
 
 - name: setup workshop specific controller information
-  include_tasks: "{{item}}"
   with_first_found:
     - "{{ role_path }}/tasks/{{ workshop_type }}.yml"
     - "{{ role_path }}/tasks/unsupported_workshop.yml"
+  ansible.builtin.include_tasks: "{{item}}"

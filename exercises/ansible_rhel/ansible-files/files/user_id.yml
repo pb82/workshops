@@ -2,7 +2,7 @@
 - name: Get user ID
   hosts: node1
   vars:
-    myuser: "dev_user"
+    myuser: dev_user
   tasks:
     - name: Get {{ myuser }} info
       getent:

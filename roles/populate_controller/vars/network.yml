@@ -1,42 +1,42 @@
 ---
 controller_hosts:
-  - name: "backup-server"
-    description: "this server is where we backup network configuration"
-    inventory: "Workshop Inventory"
+  - name: backup-server
+    description: this server is where we backup network configuration
+    inventory: Workshop Inventory
     enabled: true
     variables:
       note: in production these passwords would be encrypted in vault
-      ansible_user: "ec2-user"
+      ansible_user: ec2-user
       ansible_password: "{{ admin_password }}"
       ansible_host: "{{ ansible_host }}"
-  - name: "ansible-1"
-    description: "control node where AAP is running"
-    inventory: "Workshop Inventory"
+  - name: ansible-1
+    description: control node where AAP is running
+    inventory: Workshop Inventory
     enabled: true
     variables:
-      ansible_user: "ec2-user"    
+      ansible_user: ec2-user
 controller_organizations:
-  - name: "Red Hat network organization"
-    description: "Red Hat Network Organization"
+  - name: Red Hat network organization
+    description: Red Hat Network Organization
     galaxy_credentials:
-      - "Ansible Galaxy"
-  - name: "Red Hat compute organization"
-    description: "Red Hat Compute Organization"
+      - Ansible Galaxy
+  - name: Red Hat compute organization
+    description: Red Hat Compute Organization
     galaxy_credentials:
-      - "Ansible Galaxy"
+      - Ansible Galaxy
 controller_teams:
-  - name: "Netops"
-    description: "Network Ops Team"
-    organization: "Red Hat network organization"
-  - name: "Netadmin"
-    description: "Network Admin Team"
-    organization: "Red Hat network organization"
-  - name: "Compute T1"
-    description: "Computer T1 Team"
-    organization: "Red Hat compute organization"
-  - name: "Compute T2"
-    description: "Computer T2 Team"
-    organization: "Red Hat compute organization"
+  - name: Netops
+    description: Network Ops Team
+    organization: Red Hat network organization
+  - name: Netadmin
+    description: Network Admin Team
+    organization: Red Hat network organization
+  - name: Compute T1
+    description: Computer T1 Team
+    organization: Red Hat compute organization
+  - name: Compute T2
+    description: Computer T2 Team
+    organization: Red Hat compute organization
 controller_user_accounts:
   - user: network-operator
     is_superuser: false
@@ -77,117 +77,117 @@ controller_user_accounts:
     first_name: Gene
     last_name: Belcher
 controller_projects:
-  - name: "Workshop Project"
-    organization: "Red Hat network organization"
+  - name: Workshop Project
+    organization: Red Hat network organization
     scm_type: git
-    scm_url: "https://github.com/network-automation/toolkit"
+    scm_url: https://github.com/network-automation/toolkit
 controller_roles:
   - user: network-admin
-    organization: "Red Hat network organization"
+    organization: Red Hat network organization
     role: member
   - user: network-admin
-    organization: "Red Hat network organization"
+    organization: Red Hat network organization
     role: admin
   - user: network-operator
-    organization: "Red Hat network organization"
+    organization: Red Hat network organization
     role: member
   - user: network-operator
-    target_team: "Netops"
+    target_team: Netops
     role: member
   - role: use
-    inventory: "Workshop Inventory"
+    inventory: Workshop Inventory
     team: Netops
   - role: use
-    inventory: "Workshop Inventory"
+    inventory: Workshop Inventory
     team: Netadmin
   - user: network-operator
     role: execute
-    job_template: "Network-Commands"
+    job_template: Network-Commands
 controller_templates:
-  - name: "Network-Commands"
-    description: "adhoc cisco commands"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "playbooks/network_commands.yml"
-    credentials: "Workshop Credential"
-    limit: "cisco"
+  - name: Network-Commands
+    description: adhoc cisco commands
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: playbooks/network_commands.yml
+    credentials: Workshop Credential
+    limit: cisco
     survey_enabled: true
     survey: "{{ lookup('template', 'survey_spec.json') }}"
-    execution_environment: "network workshop execution environment"
-  - name: "Network-Reload"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "playbooks/network_reload.yml"
-    credentials: "Workshop Credential"
-    execution_environment: "network workshop execution environment"
-  - name: "Network-User"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "playbooks/network_user.yml"
-    credentials: "Workshop Credential"
-    state: "present"
+    execution_environment: network workshop execution environment
+  - name: Network-Reload
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: playbooks/network_reload.yml
+    credentials: Workshop Credential
+    execution_environment: network workshop execution environment
+  - name: Network-User
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: playbooks/network_user.yml
+    credentials: Workshop Credential
+    state: present
     survey_enabled: true
     survey: "{{ lookup('template', 'user.json') }}"
-    execution_environment: "network workshop execution environment"
-  - name: "Network-Time"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "playbooks/network_time.yml"
-    credentials: "Workshop Credential"
-    limit: "cisco"
+    execution_environment: network workshop execution environment
+  - name: Network-Time
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: playbooks/network_time.yml
+    credentials: Workshop Credential
+    limit: cisco
     survey_enabled: true
     survey: "{{ lookup('template', 'network_time.json') }}"
-    execution_environment: "network workshop execution environment"
-  - name: "Network-Report"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "playbooks/network_report.yml"
-    credentials: "Workshop Credential"
-    execution_environment: "network workshop execution environment"
-  - name: "Network-System"
-    job_type: "run"
-    inventory: "Workshop Inventory"
-    project: "Workshop Project"
-    playbook: "playbooks/network_system.yml"
-    credentials: "Workshop Credential"
-    limit: "cisco"
+    execution_environment: network workshop execution environment
+  - name: Network-Report
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: playbooks/network_report.yml
+    credentials: Workshop Credential
+    execution_environment: network workshop execution environment
+  - name: Network-System
+    job_type: run
+    inventory: Workshop Inventory
+    project: Workshop Project
+    playbook: playbooks/network_system.yml
+    credentials: Workshop Credential
+    limit: cisco
     survey_enabled: true
     survey: "{{ lookup('template', 'system.json') }}"
-    execution_environment: "network workshop execution environment"
+    execution_environment: network workshop execution environment
 controller_groups:
   - name: cisco
-    inventory: "Workshop Inventory"
+    inventory: Workshop Inventory
     variables:
       ansible_network_os: ios
       ansible_connection: network_cli
   - name: arista
-    inventory: "Workshop Inventory"
+    inventory: Workshop Inventory
     variables:
       ansible_network_os: eos
       ansible_connection: network_cli
       ansible_become: true
       ansible_become_method: enable
   - name: juniper
-    inventory: "Workshop Inventory"
+    inventory: Workshop Inventory
     variables:
       ansible_network_os: junos
       ansible_connection: netconf
   - name: routers
-    inventory: "Workshop Inventory"
+    inventory: Workshop Inventory
     children:
       - cisco
       - arista
       - juniper
   - name: network
-    inventory: "Workshop Inventory"
+    inventory: Workshop Inventory
     children:
       - routers
     variables:
-      restore_inventory: "Workshop Inventory"
-      restore_credential: "Workshop Credential"
-      restore_project: "Workshop Project"
+      restore_inventory: Workshop Inventory
+      restore_credential: Workshop Credential
+      restore_project: Workshop Project

@@ -3,9 +3,8 @@
   hosts: builder
   gather_facts: true
   vars_files:
-    - "../vault.yml"
+    - ../vault.yml
   tasks:
     - name: Include ee_builder role
       ansible.builtin.include_role:
         name: infra.ee_utilities.ee_builder
-...

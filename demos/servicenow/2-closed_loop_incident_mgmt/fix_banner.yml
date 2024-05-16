@@ -5,13 +5,11 @@
   gather_facts: false
 
   tasks:
-
     - name: CONFIGURE THE LOGIN BANNER
       ios_banner:
         banner: login
-        text: "DEMO BANNER FOR DEVICE {{ inventory_hostname }}"
+        text: DEMO BANNER FOR DEVICE {{ inventory_hostname }}
         state: present
-
 
     - name: MARK THE TICKET AS RESOLVED
       snow_record:
@@ -23,7 +21,7 @@
         number: "{{ incident_num }}"
         data:
           state: 6
-          comments: "Banner has been updated, marking resolved"
+          comments: Banner has been updated, marking resolved
       when: incident_num is defined
 
     - name: MARK THE TICKET AS CLOSED
@@ -36,5 +34,5 @@
         table: incident
         data:
           state: 7
-          comments: "Banner has been updated, closing ticket"
+          comments: Banner has been updated, closing ticket
       when: incident_num is defined

@@ -3,7 +3,6 @@
   hosts: localhost
 
   pre_tasks:
-
     - name: MAKE THE ROLES DIR
       file:
         path: ../chatops_pb/roles
@@ -13,53 +12,52 @@
       command: ansible-galaxy install termlen0.ios_check_acls -p ../chatops_pb/roles/
 
   tasks:
-
     - name: UPDATE CUSTOM VARIABLES - SLASH COMMAND
       lineinfile:
         path: ../check_traffic.py
-        regexp: '^@app.*slash_cmd'
+        regexp: ^@app.*slash_cmd
         line: '@app.route("/{{ slash_cmd }}", methods=["POST"]) #slash_cmd'
 
     - name: UPDATE CUSTOM VARIABLES - INTERACTIVE URI
       lineinfile:
         path: ../check_traffic.py
-        regexp: '^@app.*icomponent'
+        regexp: ^@app.*icomponent
         line: '@app.route("/{{ slack_interactive }}", methods=["POST"]) #icomponent'
 
     - name: UPDATE CUSTOM VARIABLES - SLACK TOKEN
       lineinfile:
         path: ../check_traffic.py
-        regexp: '^SLACK_VERIFICATION_TOKEN.*'
-        line: 'SLACK_VERIFICATION_TOKEN = "{{ slack_token }}"'
+        regexp: ^SLACK_VERIFICATION_TOKEN.*
+        line: SLACK_VERIFICATION_TOKEN = "{{ slack_token }}"
 
     - name: UPDATE CUSTOM VARIABLES - SLACK BOT TOKEN
       lineinfile:
         path: ../check_traffic.py
-        regexp: '^SLACK_BOT_TOKEN.*'
-        line: 'SLACK_BOT_TOKEN = "{{ slack_bot_token }}"'
+        regexp: ^SLACK_BOT_TOKEN.*
+        line: SLACK_BOT_TOKEN = "{{ slack_bot_token }}"
 
     - name: UPDATE CUSTOM VARIABLES - TOWER HOSTNAME
       lineinfile:
         path: ../check_traffic.py
-        regexp: '^TOWER_HOSTNAME.*'
-        line: 'TOWER_HOSTNAME = "{{ tower_hostname }}"'
+        regexp: ^TOWER_HOSTNAME.*
+        line: TOWER_HOSTNAME = "{{ tower_hostname }}"
 
     - name: UPDATE CUSTOM VARIABLES - TOWER USERNAME
       lineinfile:
         path: ../check_traffic.py
-        regexp: '^TOWER_USERNAME.*'
-        line: 'TOWER_USERNAME = "{{ tower_username }}"'
+        regexp: ^TOWER_USERNAME.*
+        line: TOWER_USERNAME = "{{ tower_username }}"
 
     - name: UPDATE CUSTOM VARIABLES - TOWER PASSWORD
       lineinfile:
         path: ../check_traffic.py
-        regexp: '^TOWER_PASSWORD.*'
-        line: 'TOWER_PASSWORD = "{{ tower_password }}"'
+        regexp: ^TOWER_PASSWORD.*
+        line: TOWER_PASSWORD = "{{ tower_password }}"
 
     - name: UPDATE CUSTOM VARIABLES - SLACK CALLBACK
       lineinfile:
         path: ../chatops_pb/check_acls.yaml
-        regexp: '^\s+response_url:.*'
+        regexp: ^\s+response_url:.*
         line: '    response_url: "{{ slack_webhook }}"'
 
     - name: MOVE THE PLAYBOOK TO VAR/LIB
@@ -69,7 +67,6 @@
       become: true
       become_method: sudo
       become_user: awx
-
 
 - name: ADD SOME TEST ACLS INTO THE ROUTERS
   hosts: cisco
@@ -113,12 +110,10 @@
           protocol: udp
           action: permit
 
-
   tasks:
     - name: template
       ios_config:
         src: ios_acls.j2
-
 
 - name: ADD JOB TEMPLATE TO TOWER
   hosts: cisco
@@ -126,19 +121,15 @@
   become: true
   gather_facts: false
   tasks:
-
     - name: INCLUDE THE TOWER TASKS
       include_role:
         name: tower_tasks
-
 
 - name: INSTALL AND START THE FLASK APP
   hosts: localhost
   gather_facts: true
 
-
   tasks:
-
     - name: INSTALL GCC
       yum:
         name:
@@ -172,17 +163,17 @@
       become_method: sudo
 
     - name: ADD THE SELINUX POLICY TO ALLOW UNIX SOCKET WRITES - CHECKMODULE
-      command: "checkmodule -M -m -o /tmp/nginx.mod {{ playbook_dir }}/files/nginx.te"
+      command: checkmodule -M -m -o /tmp/nginx.mod {{ playbook_dir }}/files/nginx.te
       become: true
       become_method: sudo
 
     - name: ADD THE SELINUX POLICY TO ALLOW UNIX SOCKET WRITES - SEMODULE_PACKAGE
-      command: "semodule_package -o /tmp/nginx.pp -m /tmp/nginx.mod"
+      command: semodule_package -o /tmp/nginx.pp -m /tmp/nginx.mod
       become: true
       become_method: sudo
 
     - name: ADD THE SELINUX POLICY TO ALLOW UNIX SOCKET WRITES - SEMODULE
-      command: "semodule -i /tmp/nginx.pp"
+      command: semodule -i /tmp/nginx.pp
       become: true
       become_method: sudo
 
@@ -190,7 +181,6 @@
       template:
         src: check_traffic_service.j2
         dest: "{{ playbook_dir}}/files/check_traffic.service"
-
 
     - name: CREATE THE WSGI INI FILE
       template:

@@ -1,56 +1,56 @@
 ---
 - name: Enable TCP port 9000 for php-fpm
-  lineinfile:
-    path: /etc/php-fpm.d/www.conf
-    regexp: '^listen ='
-    line: 'listen = 127.0.0.1:9000'
   notify: restart php-fpm
+  ansible.builtin.lineinfile:
+    path: /etc/php-fpm.d/www.conf
+    regexp: ^listen =
+    line: listen = 127.0.0.34:9000
 
 - name: Start Services
-  service:
+  notify: restart nginx
+  ansible.builtin.service:
     name: "{{ item }}"
     state: started
     enabled: true
-  with_items:
+  loop:
     - mariadb
     - php-fpm
-  notify: restart nginx
 
 - name: Set permissions on the PHP Session directory
-  file:
+  ansible.builtin.file:
     path: /var/lib/php/session/
     owner: nginx
     group: nginx
-    mode: 0777
+    mode: 511
     state: directory
 
 - name: Create users directory on server
-  file:
+  ansible.builtin.file:
     path: /usr/share/nginx/html/
     state: directory
 
 - name: Copy users file to server
-  template:
+  ansible.builtin.template:
     src: templates/index.php.j2
     dest: /usr/share/nginx/html/index.php
 
 - name: Copy files over to attendance node
-  copy:
-    src: "{{ item }}"
-    dest: "/usr/share/nginx/html/{{ item }}"
   loop:
     - redhat-ansible-logo.svg
     - redhat-logo.svg
     - style.css
     - favicon.ico
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /usr/share/nginx/html/{{ item }}
 
 - name: Copy list file to server
-  template:
+  ansible.builtin.template:
     src: templates/list.php.j2
     dest: /usr/share/nginx/html/list.php
 
 - name: Install PyMySQL
-  pip:
+  ansible.builtin.pip:
     name: PyMySQL
 
 - name: make sure any previous runs 'workshop' database is reset
@@ -64,10 +64,10 @@
     state: present
 
 - name: Copy SQL template to server
-  template:
+  register: workshopsql
+  ansible.builtin.template:
     src: templates/workshop.sql.j2
     dest: /tmp/workshop.sql
-  register: workshopsql
 
 - name: Import SQL file into workshop database
   community.mysql.mysql_db:

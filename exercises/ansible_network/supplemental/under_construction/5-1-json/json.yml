@@ -4,7 +4,6 @@
   gather_facts: false
 
   tasks:
-
     - name: RUN ARISTA COMMAND
       eos_command:
         commands: show interfaces eth1 | json

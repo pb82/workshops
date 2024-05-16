@@ -1,29 +1,27 @@
 ---
 - name: Install EPEL
-  dnf:
-    name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm"
+  ansible.builtin.package:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
     state: present
-    disable_gpg_check: true
 
-# Sean March 2, 2022 - not sure we need this if we have EPEL
 - name: setup repo
-  copy:
+  ansible.builtin.copy:
     src: nginx.repo
     dest: /etc/yum.repos.d/nginx.repo
 
 - name: selinux bindings RHEL8
-  package:
-    name:
-      - policycoreutils-python-utils
-      - python3-libselinux
-    state: present
   when:
     - ansible_selinux.status is defined
     - ansible_selinux.status == "enabled"
     - ansible_distribution_major_version|int == 8
+  ansible.builtin.package:
+    name:
+      - policycoreutils-python-utils
+      - python3-libselinux
+    state: present
 
 - name: Install MySQL, PHP, Git
-  yum:
+  ansible.builtin.package:
     name:
       - mariadb-server
       - php

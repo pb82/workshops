@@ -15,7 +15,7 @@
           command: /usr/bin/ansible-playbook web_attack_simulation.yml
 
         - name: Verify attack string not in log file
-          command: "ssh ec2-user@{{ hostvars['snort']['ansible_host'] }} sudo grep web_attack /var/log/httpd/access_log"
+          command: ssh ec2-user@{{ hostvars['snort']['ansible_host'] }} sudo grep web_attack /var/log/httpd/access_log
           register: grep_result
           failed_when: grep_result.rc == 0
 
@@ -28,12 +28,12 @@
           command: /usr/bin/ansible-playbook whitelist_attacker.yml
 
         - name: install required collections
-          command: "ansible-galaxy collection install {{ item }}"
+          command: ansible-galaxy collection install {{ item }}
           loop:
             - ibm.qradar
 
         - name: install required roles
-          command: "ansible-galaxy install {{ item }}"
+          command: ansible-galaxy install {{ item }}
           loop:
             - ansible_security.ids_rule
             - ansible_security.ids_config
@@ -47,7 +47,7 @@
           command: /usr/bin/ansible-playbook --start-at-task="Install policy" whitelist_attacker.yml
 
         - name: Verify attack string in log file
-          command: "ssh ec2-user@{{ hostvars['snort']['ansible_host'] }} sudo grep web_attack /var/log/httpd/access_log"
+          command: ssh ec2-user@{{ hostvars['snort']['ansible_host'] }} sudo grep web_attack /var/log/httpd/access_log
           retries: 12
           delay: 15
           register: result
@@ -57,7 +57,7 @@
       block:
         - name: Get Check Point MGMT server name, step 1/2 - login, get SID
           uri:
-            url: "https://{{ hostvars['checkpoint']['ansible_host'] }}/web_api/login"
+            url: https://{{ hostvars['checkpoint']['ansible_host'] }}/web_api/login
             method: POST
             body:
               user: admin
@@ -71,7 +71,7 @@
 
         - name: Get Check Point MGMT server name, step 2/2 - Get server name
           uri:
-            url: "https://{{ hostvars['checkpoint']['ansible_host'] }}/web_api/show-gateways-and-servers"
+            url: https://{{ hostvars['checkpoint']['ansible_host'] }}/web_api/show-gateways-and-servers
             validate_certs: false
             method: POST
             headers:

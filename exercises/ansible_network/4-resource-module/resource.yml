@@ -4,7 +4,6 @@
   gather_facts: false
 
   tasks:
-
     - name: Use vlans resource module
       arista.eos.eos_vlans:
         state: merged

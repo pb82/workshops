@@ -4,12 +4,11 @@
   gather_facts: false
 
   tasks:
-
     - name: Use snmp resource module
       cisco.ios.ios_snmp_server:
         state: merged
         config:
-          location: 'Durham'
+          location: Durham
           packet_size: 500
           communities:
             - acl_v4: acl_uq

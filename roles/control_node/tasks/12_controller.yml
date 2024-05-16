@@ -1,15 +1,15 @@
 ---
 - name: template inventory file for Ansible Controller Install
-  template:
-    src: "controller_install.j2"
-    dest: "{{ aap_dir }}/inventory"
   when: create_cluster is not defined or not create_cluster|bool
+  ansible.builtin.template:
+    src: controller_install.j2
+    dest: "{{ aap_dir }}/inventory"
 
 - name: template inventory file for Automation Controller Install cluster
-  template:
+  when: create_cluster is defined and create_cluster|bool
+  ansible.builtin.template:
     src: tower_cluster_install.j2
     dest: "{{ aap_dir }}/inventory"
-  when: create_cluster is defined and create_cluster|bool
 
 - name: Copy manifest.zip to {{ app_dir }}
   ansible.builtin.copy:
@@ -17,51 +17,51 @@
     dest: "{{ aap_dir }}"
     owner: "{{ username }}"
     group: "{{ username }}"
-    mode: '0644'
+    mode: "0644"
 
 - name: Create {{ aap_dir }}/config directory
   ansible.builtin.file:
     path: "{{ aap_dir }}/config"
     state: directory
-    mode: '0755'
+    mode: "0755"
 
 - name: Copy users.yml to {{ aap_dir }}/config
   ansible.builtin.copy:
-    src: "users.yml"
+    src: users.yml
     dest: "{{ aap_dir }}/config"
     owner: "{{ username }}"
     group: "{{ username }}"
-    mode: '0644'
+    mode: "0644"
 
 - name: run the Automation Controller installer
   become: true
   become_user: ec2-user
   environment:
     ANSIBLE_COLLECTIONS_PATH: "{{ aap_dir }}/collections"
-  shell: "{{ controller_install_command }}"
   args:
     chdir: "{{ aap_dir }}"
   async: 1400
   poll: 15
 
-# - name: run the Automation Controller installer
-#   ansible.builtin.import_playbook: ansible.containerized_installer.install
+  # - name: run the Automation Controller installer
+  #   ansible.builtin.import_playbook: ansible.containerized_installer.install
+  ansible.builtin.shell: "{{ controller_install_command }}"
 
 - name: wait for Automation Controller to be up
-  uri:
-    url: https://localhost/api/v2/ping/
-    method: GET
-    user: admin
-    password: "{{ admin_password }}"
-    validate_certs: false
   register: check2
   until: check2.json is defined and check2.json.instances[0].capacity > 0 and check2.json.instance_groups[0].capacity > 0
   retries: 60
   delay: 10
+  ansible.builtin.uri:
+    url: https://localhost/api/v2/ping/
+    method: GET
+    user: admin
+    password: "{{ _password_ }}"
+    validate_certs: false
 
 - name: Display /api/v2/ping results
-  debug:
-    msg: '{{ check2.json }}'
+  ansible.builtin.debug:
+    msg: "{{ check2.json }}"
 
 # - name: load license block
 #   block:
@@ -98,14 +98,15 @@
 #   retries: 5
 
 ## Execution environments
+
 - name: create container registry credential
   awx.awx.credential:
-    name: '{{ ee_registry_name }} credential'
+    name: "{{ _name_ }}"
     organization: Default
     credential_type: Container Registry
-    controller_host: "https://localhost"
+    controller_host: https://localhost
     controller_username: admin
-    controller_password: "{{ admin_password }}"
+    controller_password: "{{ _controller_password_ }}"
     validate_certs: false
     inputs:
       username: "{{ redhat_username }}"
@@ -114,13 +115,13 @@
 
 - name: update default EE to use credential
   awx.awx.execution_environment:
-    name: "Default execution environment"
-    image: "{{ ee_default_image }}"
+    name: Default execution environment
+    image: "{{ _image_ }}"
     pull: missing
-    credential: "registry.redhat.io credential"
+    credential: registry.redhat.io credential
     controller_username: admin
     controller_password: "{{ admin_password }}"
-    controller_host: "https://localhost"
+    controller_host: https://localhost
     validate_certs: false
   register: ee_check
   until: ee_check is not failed

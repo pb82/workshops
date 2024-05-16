@@ -3,12 +3,12 @@
   hosts: web
   become: true
   tasks:
-  - name: Copy Apache configuration file
-    copy:
-      src: httpd.conf
-      dest: /etc/httpd/conf/
-    notify:
-      - restart_apache
+    - name: Copy Apache configuration file
+      copy:
+        src: httpd.conf
+        dest: /etc/httpd/conf/
+      notify:
+        - restart_apache
   handlers:
     - name: restart_apache
       service:

@@ -5,7 +5,6 @@
   gather_facts: false
 
   tasks:
-
     - name: GATHER THE CURRENT BANNER ON THE DEVICE
       ios_command:
         commands:
@@ -27,11 +26,11 @@
             state: present
             table: incident
             data:
-              short_description: "BANNER MISSING ON {{inventory_hostname}}"
+              short_description: BANNER MISSING ON {{inventory_hostname}}
               severity: 3
               priority: 2
-              caller_id: "System Administrator"
-              comments: "The login banner is missing on {{inventory_hostname}}"
+              caller_id: System Administrator
+              comments: The login banner is missing on {{inventory_hostname}}
           register: snow_var
           delegate_to: localhost
 

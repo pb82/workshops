@@ -8,16 +8,14 @@
           - aap_download_url.startswith('https://')
           - aap_download_user is defined
           - aap_download_password is defined
-        fail_msg: >-
-          aap_download_url must be secure and requires aap_download_user
-          and aap_download_password.
+        fail_msg: aap_download_url must be secure and requires aap_download_user and aap_download_password.
 
     - name: Download AAP tarball
       ansible.builtin.get_url:
-        url: "{{ aap_download_url }}"
+        url: "{{ _url_ }}"
         dest: "{{ playbook_dir }}/aap.tar.gz"
-        username: "{{ aap_download_user }}"
-        password: "{{ aap_download_password }}"
+        username: "{{ _username_ }}"
+        password: "{{ _password_ }}"
         force_basic_auth: true
       register: download_aap_tarball
       until: download_aap_tarball is not failed

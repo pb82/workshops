@@ -3,12 +3,11 @@
   hosts: web
   become: true
   tasks:
-
     - name: Copy Apache configuration file
       ansible.builtin.copy:
         src: httpd.conf
         dest: /etc/httpd/conf/
-        mode: '644'
+        mode: "644"
       notify:
         - Restart_apache
 

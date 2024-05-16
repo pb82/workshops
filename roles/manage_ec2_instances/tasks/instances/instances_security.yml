@@ -11,7 +11,6 @@
     - name: RESCUE RETRY - Import Create EC2 Tasks
       import_tasks: "{{ role_path }}/tasks/security_includes/security_ec2_create_instances.yml"
 
-
 - name: EC2 Tags Block - SECURITY MODE
   block:
     - name: Import EC2 Tags Tasks
@@ -27,7 +26,6 @@
   rescue:
     - name: RESCUE RETRY - Import EC2 Subnet2 ENI
       import_tasks: "{{ role_path }}/tasks/security_includes/security_ec2_subnet2_eni.yml"
-
 
 ###############################################################################
 # The CheckPoint GW

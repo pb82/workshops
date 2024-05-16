@@ -4,7 +4,7 @@
   gather_facts: false
   vars:
     cfg:
-      location: 'Durham'
+      location: Durham
       communities:
         - acl_v4: acl_uq
           name: Durham-community

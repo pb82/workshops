@@ -1,6 +1,6 @@
 ---
 galaxy_info:
-  author: "Adam Miller <admiller@redhat.com>"
+  author: Adam Miller <admiller@redhat.com>
   description: install splunk enterprise
   company: Red Hat Inc
 

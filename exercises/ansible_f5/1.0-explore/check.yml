@@ -4,11 +4,10 @@
   connection: local
   gather_facts: false
 
-
   tasks:
     - name: check bigip to make sure it is online
       uri:
-        url: "https://{{ ansible_host }}:8443/mgmt/shared"
+        url: https://{{ ansible_host }}:8443/mgmt/shared
         method: GET
         status_code: 200
         timeout: 300

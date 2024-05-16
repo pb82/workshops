@@ -29,6 +29,7 @@
         timeout: 30
 
 # sean modified password line to accept special characters like > based on docs https://docs.gitea.io/en-us/config-cheat-sheet/
+
 - name: Git Post | use gitea cli to create student user(s)
   ansible.builtin.shell: >
     /usr/local/bin/gitea -c /etc/gitea/gitea.ini admin user create

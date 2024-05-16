@@ -7,7 +7,7 @@
         region: "{{ ec2_region }}"
         filters:
           instance-state-name: running
-          "tag:Workshop_splunk": "{{ec2_name_prefix}}-splunk"
+          tag:Workshop_splunk: "{{ec2_name_prefix}}-splunk"
       register: splunk_node_facts
 
     - name: ADD SPLUNK NODE TO INVENTORY
@@ -38,7 +38,7 @@
         region: "{{ ec2_region }}"
         filters:
           instance-state-name: running
-          "tag:Workshop_qradar": "{{ec2_name_prefix}}-qradar"
+          tag:Workshop_qradar: "{{ec2_name_prefix}}-qradar"
       register: qradar_node_facts
 
     - name: ADD QRADAR NODE TO INVENTORY
@@ -68,7 +68,7 @@
         region: "{{ ec2_region }}"
         filters:
           instance-state-name: running
-          "tag:Workshop_attacker": "{{ec2_name_prefix}}-attacker"
+          tag:Workshop_attacker: "{{ec2_name_prefix}}-attacker"
       register: attacker_node_facts
 
     - name: debug attacker_node_facts
@@ -99,7 +99,7 @@
     region: "{{ ec2_region }}"
     filters:
       instance-state-name: running
-      "tag:Workshop_checkpoint_gw": "{{ ec2_name_prefix }}-checkpoint"
+      tag:Workshop_checkpoint_gw: "{{ ec2_name_prefix }}-checkpoint"
   register: checkpoint_gw_facts
 
 - name: MANAGE SNORT EC2 INSTANCES (SECURITY MODE)
@@ -109,7 +109,7 @@
         region: "{{ ec2_region }}"
         filters:
           instance-state-name: running
-          "tag:Workshop_snort": "{{ec2_name_prefix}}-snort"
+          tag:Workshop_snort: "{{ec2_name_prefix}}-snort"
       register: snort_node_facts
 
     - name: ADD SNORT NODE TO INVENTORY
@@ -139,7 +139,7 @@
         region: "{{ ec2_region }}"
         filters:
           instance-state-name: running
-          "tag:Workshop_checkpoint_mgmt": "{{ec2_name_prefix}}-checkpoint"
+          tag:Workshop_checkpoint_mgmt: "{{ec2_name_prefix}}-checkpoint"
       register: checkpoint_node_facts
 
     - name: ADD Check Point CloudGuard Security Management TO INVENTORY
@@ -166,7 +166,7 @@
         region: "{{ ec2_region }}"
         filters:
           instance-state-name: running
-          "tag:Workshop_checkpoint_gw": "{{ ec2_name_prefix }}-checkpoint"
+          tag:Workshop_checkpoint_gw: "{{ ec2_name_prefix }}-checkpoint"
       register: checkpoint_gw_node_facts
 
     - name: ADD Check Point NGFW TO INVENTORY
@@ -195,7 +195,7 @@
         region: "{{ ec2_region }}"
         filters:
           instance-state-name: running
-          "tag:Workshop_windows": "{{ec2_name_prefix}}-windows"
+          tag:Workshop_windows: "{{ec2_name_prefix}}-windows"
       register: windows_node_facts
 
     - name: ADD WINDOWS WORKSTATION TO INVENTORY
