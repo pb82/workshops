@@ -4,8 +4,8 @@
     name: "{{ username }}"
     state: present
   tags:
-    - user_accounts
-    - users
+  - user_accounts
+  - users
 
 - name: Create User Account
   ansible.builtin.user:
@@ -16,5 +16,5 @@
     state: present
     password: "{{ admin_password_hash }}"
   tags:
-    - user_accounts
-    - users
+  - user_accounts
+  - users

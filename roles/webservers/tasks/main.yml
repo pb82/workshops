@@ -6,7 +6,7 @@
   until: config_webservers is not failed
 
 - name: Setup workshop specific webserver information
-  include_tasks: "{{ item }}"
   with_first_found:
-    - "{{ role_path }}/tasks/{{ workshop_type }}.yml"
-    - "{{ role_path }}/tasks/unsupported_workshop.yml"
+  - '{{ role_path }}/tasks/{{ workshop_type }}.yml'
+  - '{{ role_path }}/tasks/unsupported_workshop.yml'
+  ansible.builtin.include_tasks: "{{ item }}"

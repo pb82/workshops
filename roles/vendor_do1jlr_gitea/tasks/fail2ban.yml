@@ -6,7 +6,7 @@
     dest: /etc/fail2ban/filter.d/gitea.conf
     owner: root
     group: root
-    mode: 0444
+    mode: 292
   notify: systemctl restart fail2ban
   when: "'fail2ban' in ansible_facts.packages"
 
@@ -17,7 +17,7 @@
     dest: /etc/fail2ban/jail.d/gitea.conf
     owner: root
     group: root
-    mode: 0444
+    mode: 292
   notify: systemctl restart fail2ban
   when: "'fail2ban' in ansible_facts.packages"
 

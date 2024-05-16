@@ -7,9 +7,9 @@
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
     mode: 'u=rwX,g=rX,o='
-  with_items:
-    - "{{ gitea_custom }}/templates"
-    - "{{ gitea_custom }}/templates/custom"
+  loop:
+  - '{{ gitea_custom }}/templates'
+  - '{{ gitea_custom }}/templates/custom'
 
 - name: transfer custom footer template
   become: true

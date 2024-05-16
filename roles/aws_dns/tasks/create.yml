@@ -1,7 +1,8 @@
 ---
 - name: Configure DNS for the Automation controller node
   become: false
-  community.aws.route53:
+  delegate_to: localhost
+  amazon.aws.route53:
     state: "{{ s3_state }}"
     zone: "{{ workshop_dns_zone }}"
     record: "{{ student }}.{{ ec2_name_prefix|lower }}.{{ workshop_dns_zone }}"
@@ -9,4 +10,3 @@
     overwrite: true
     value: "{{ ansible_host }}"
     wait: true
-  delegate_to: localhost

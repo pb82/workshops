@@ -7,9 +7,9 @@
     owner: "{{ gitea_user }}"
     group: "{{ gitea_group }}"
     mode: 'u=rwX,g=rX,o='
-  with_items:
-    - "{{ gitea_custom }}/public"
-    - "{{ gitea_custom }}/public/img"
+  loop:
+  - '{{ gitea_custom }}/public'
+  - '{{ gitea_custom }}/public/img'
 
 - name: transfer custom logo.svg
   become: true

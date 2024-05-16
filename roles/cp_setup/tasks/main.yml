@@ -20,7 +20,7 @@
     method: POST
     headers:
       Content-Type: application/json
-      X-chkp-sid: "{{ login_data.json.sid }}"
+      X-chkp-sid: '{{ login_data.json.sid }}'
     body_format: json
     body:
       name: myngfw
@@ -30,26 +30,26 @@
       version: R80.40
       os-name: Gaia
       interfaces:
-        - anti-spoofing: true
-          anti-spoofing-settings:
-            action: prevent
-          name: "eth0"
-          ip-address: "{{ hostvars[inventory_hostname|regex_replace('ansible-1', 'checkpoint_gw')]['private_ip'] }}"
-          network-mask: "255.255.0.0"
-          ipv4-mask-length: 16
-          security-zone: false
-          topology: internal
-          topology-settings:
-            ip-address-behind-this-interface: "network defined by the interface ip and net mask"
-        - anti-spoofing: true
-          anti-spoofing-settings:
-            action: prevent
-          name: "eth1"
-          ip-address: "{{ hostvars[inventory_hostname|regex_replace('ansible-1', 'checkpoint_gw')]['private_ip2'] }}"
-          network-mask: "255.255.0.0"
-          ipv4-mask-length: 16
-          security-zone: false
-          topology: external
+      - anti-spoofing: true
+        anti-spoofing-settings:
+          action: prevent
+        name: eth0
+        ip-address: "{{ hostvars[inventory_hostname|regex_replace('ansible-1', 'checkpoint_gw')]['private_ip'] }}"
+        network-mask: 255.255.0.0
+        ipv4-mask-length: 16
+        security-zone: false
+        topology: internal
+        topology-settings:
+          ip-address-behind-this-interface: network defined by the interface ip and net mask
+      - anti-spoofing: true
+        anti-spoofing-settings:
+          action: prevent
+        name: eth1
+        ip-address: "{{ hostvars[inventory_hostname|regex_replace('ansible-1', 'checkpoint_gw')]['private_ip2'] }}"
+        network-mask: 255.255.0.0
+        ipv4-mask-length: 16
+        security-zone: false
+        topology: external
 
 - name: Publish
   ansible.builtin.uri:
@@ -58,7 +58,7 @@
     method: POST
     headers:
       Content-Type: application/json
-      X-chkp-sid: "{{ login_data.json.sid }}"
+      X-chkp-sid: '{{ login_data.json.sid }}'
     body_format: json
     body: >
       {}
@@ -67,8 +67,8 @@
   amazon.aws.ec2_instance_info:
     region: "{{ ec2_region }}"
     filters:
-      "tag:Name": "{{ inventory_hostname|regex_replace('ansible-1', 'checkpoint_gw') }}"
-      "instance-state-name": running
+      tag:Name: "{{ inventory_hostname|regex_replace('ansible-1', 'checkpoint_gw') }}"
+      instance-state-name: running
   register: gw_inst
   delegate_to: localhost
 

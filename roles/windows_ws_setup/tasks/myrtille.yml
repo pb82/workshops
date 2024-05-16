@@ -48,9 +48,9 @@
     name: "{{ item }}"
     data: 0
     type: dword
-  with_items:
-    - SecurityLayer
-    - UserAuthentication
+  loop:
+  - SecurityLayer
+  - UserAuthentication
 
 - name: Create RDP Application
   community.windows.win_iis_webapplication:
